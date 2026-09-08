@@ -1,4 +1,4 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="zh-CN">
 <head>
   <meta charset="UTF-8">
@@ -15,118 +15,181 @@
       --brand-blue: #1565c0;
       --brand-blue-light: #e3f2fd;
     }
-    body { font-family: "Microsoft YaHei", "PingFang SC", sans-serif; scroll-behavior: smooth; }
+    * { cursor: none; }
+    body { font-family: "Microsoft YaHei", "PingFang SC", sans-serif; scroll-behavior: smooth; overflow-x: hidden; }
     ion-icon { vertical-align: middle; }
-    #tsparticles { position: absolute; inset: 0; z-index: 0; }
-    .hero > .container { position: relative; z-index: 1; }
+
+    /* ===== 鼠标跟随光晕 ===== */
+    .cursor-glow {
+      position: fixed; width: 400px; height: 400px; border-radius: 50%;
+      background: radial-gradient(circle, rgba(46,158,107,0.18) 0%, transparent 70%);
+      pointer-events: none; z-index: 9999; transform: translate(-50%, -50%);
+      transition: opacity 0.3s; mix-blend-mode: screen;
+    }
+    .cursor-dot {
+      position: fixed; width: 8px; height: 8px; border-radius: 50%;
+      background: #2e9e6b; pointer-events: none; z-index: 10000;
+      transform: translate(-50%, -50%); box-shadow: 0 0 12px rgba(46,158,107,0.8);
+    }
+
+    /* ===== Preloader ===== */
+    #preloader {
+      position: fixed; inset: 0; background: #0d3b2e; z-index: 10001;
+      display: flex; flex-direction: column; align-items: center; justify-content: center;
+      transition: opacity 0.8s, visibility 0.8s;
+    }
+    #preloader.hide { opacity: 0; visibility: hidden; }
+    .seed-container { position: relative; width: 120px; height: 160px; }
+    .seed {
+      position: absolute; bottom: 40px; left: 50%; transform: translateX(-50%);
+      width: 30px; height: 40px; background: linear-gradient(135deg, #8d6e63, #5d4037);
+      border-radius: 50% 50% 50% 50% / 60% 60% 40% 40%;
+      animation: seedPulse 1s ease-in-out infinite;
+    }
+    .sprout {
+      position: absolute; bottom: 70px; left: 50%; transform: translateX(-50%) scaleY(0);
+      transform-origin: bottom; width: 4px; height: 60px;
+      background: linear-gradient(to top, #2e9e6b, #81c784);
+      border-radius: 2px; animation: sproutGrow 1.2s ease-out 0.5s forwards;
+    }
+    .leaf-l, .leaf-r {
+      position: absolute; width: 30px; height: 16px; background: #4caf50;
+      border-radius: 0 100% 0 100%; opacity: 0;
+    }
+    .leaf-l { bottom: 110px; left: calc(50% - 30px); transform: rotate(-30deg); animation: leafIn 0.6s ease-out 1.3s forwards; }
+    .leaf-r { bottom: 120px; left: calc(50% + 4px); transform: rotate(150deg) scaleX(-1); animation: leafIn 0.6s ease-out 1.5s forwards; }
+    @keyframes seedPulse { 0%,100% { transform: translateX(-50%) scale(1); } 50% { transform: translateX(-50%) scale(1.1); } }
+    @keyframes sproutGrow { to { transform: translateX(-50%) scaleY(1); } }
+    @keyframes leafIn { to { opacity: 1; } }
+    .preloader-text { color: rgba(255,255,255,0.7); font-size: 18px; margin-top: 30px; letter-spacing: 4px; }
+    .preloader-bar { width: 200px; height: 3px; background: rgba(255,255,255,0.15); border-radius: 2px; margin-top: 16px; overflow: hidden; }
+    .preloader-bar-fill { height: 100%; background: linear-gradient(90deg, #2e9e6b, #81c784); width: 0%; animation: barFill 1.8s ease-out forwards; }
+    @keyframes barFill { to { width: 100%; } }
+
+    /* ===== Hero ===== */
     .hero {
       background: linear-gradient(135deg, #0d3b2e 0%, #1a7a4c 50%, #2e9e6b 100%);
-      color: #fff;
-      padding: 80px 0 60px;
-      position: relative;
-      overflow: hidden;
+      color: #fff; padding: 80px 0 60px; position: relative; overflow: hidden; min-height: 100vh;
+      display: flex; align-items: center;
     }
+    #three-canvas { position: absolute; inset: 0; z-index: 0; }
+    .hero > .container { position: relative; z-index: 1; }
     .hero::before {
-      content: '';
-      position: absolute;
-      top: -50%; right: -20%;
+      content: ''; position: absolute; top: -50%; right: -20%;
       width: 600px; height: 600px;
       background: radial-gradient(circle, rgba(255,255,255,0.08) 0%, transparent 70%);
       border-radius: 50%;
     }
-    .hero h1 { font-size: 2.8rem; font-weight: 700; letter-spacing: 2px; }
-    .hero .lead { font-size: 1.15rem; opacity: 0.9; max-width: 640px; }
-    .badge-soft { font-size: 0.8rem; padding: 6px 14px; border-radius: 20px; }
+    .hero h1 { font-size: 3.5rem; font-weight: 700; letter-spacing: 3px; line-height: 1.2; }
+    .hero .lead { font-size: 1.2rem; opacity: 0.9; max-width: 680px; }
+    .badge-soft { font-size: 0.9rem; padding: 8px 18px; border-radius: 24px; backdrop-filter: blur(4px); }
+
+    /* ===== 通用 ===== */
     .section-title {
-      font-size: 1.6rem; font-weight: 700; color: #1a2332;
-      border-left: 4px solid var(--brand-green);
-      padding-left: 14px; margin-bottom: 8px;
+      font-size: 2rem; font-weight: 700; color: #1a2332;
+      border-left: 5px solid var(--brand-green); padding-left: 16px; margin-bottom: 10px;
     }
-    .section-sub { color: #6b7a8d; font-size: 0.95rem; margin-bottom: 28px; }
+    .section-sub { color: #6b7a8d; font-size: 1.05rem; margin-bottom: 32px; }
+    section { position: relative; }
+
+    /* ===== 架构卡片 3D 倾斜 ===== */
+    .arch-card, .feature-card, .growth-stage {
+      transform-style: preserve-3d; transition: transform 0.1s ease-out, box-shadow 0.3s;
+      will-change: transform;
+    }
     .arch-card {
-      border: none; border-radius: 14px; box-shadow: 0 4px 20px rgba(0,0,0,0.06);
-      transition: transform 0.2s, box-shadow 0.2s; height: 100%;
+      border: none; border-radius: 16px; box-shadow: 0 4px 24px rgba(0,0,0,0.07); height: 100%;
+      background: rgba(255,255,255,0.95);
     }
-    .arch-card:hover { transform: translateY(-4px); box-shadow: 0 8px 30px rgba(0,0,0,0.1); }
-    .arch-card .card-header {
-      border-radius: 14px 14px 0 0 !important; font-weight: 600; font-size: 1rem;
-      padding: 14px 18px;
-    }
+    .arch-card .card-header { border-radius: 16px 16px 0 0 !important; font-weight: 600; font-size: 1.1rem; padding: 16px 20px; }
     .arch-upper .card-header { background: var(--brand-blue-light); color: var(--brand-blue); }
     .arch-comm .card-header { background: #fff3e0; color: #e65100; }
     .arch-lower .card-header { background: var(--brand-green-light); color: var(--brand-green); }
-    .component-item {
-      display: flex; align-items: flex-start; gap: 10px;
-      padding: 8px 0; border-bottom: 1px dashed #eef1f4;
-    }
+    .component-item { display: flex; align-items: flex-start; gap: 12px; padding: 10px 0; border-bottom: 1px dashed #eef1f4; }
     .component-item:last-child { border-bottom: none; }
     .component-item .icon {
-      width: 32px; height: 32px; border-radius: 8px;
+      width: 40px; height: 40px; border-radius: 10px; display: flex; align-items: center; justify-content: center;
+      font-size: 1.1rem; flex-shrink: 0;
+    }
+    .component-item .name { font-weight: 600; font-size: 1rem; color: #1a2332; }
+    .component-item .desc { font-size: 0.85rem; color: #6b7a8d; }
+
+    /* ===== 工作流程 ===== */
+    .flow-step { text-align: center; padding: 24px 12px; }
+    .flow-step .num {
+      width: 64px; height: 64px; border-radius: 50%; color: #fff;
       display: flex; align-items: center; justify-content: center;
-      font-size: 0.9rem; flex-shrink: 0;
+      font-size: 1.5rem; font-weight: 700; margin: 0 auto 14px;
+      box-shadow: 0 6px 20px rgba(0,0,0,0.15); transition: transform 0.3s;
     }
-    .component-item .name { font-weight: 600; font-size: 0.9rem; color: #1a2332; }
-    .component-item .desc { font-size: 0.8rem; color: #6b7a8d; }
-    .flow-step {
-      position: relative; text-align: center; padding: 20px 10px;
-    }
-    .flow-step .step-num {
-      width: 48px; height: 48px; border-radius: 50%;
-      background: var(--brand-green); color: #fff;
-      display: flex; align-items: center; justify-content: center;
-      font-size: 1.2rem; font-weight: 700; margin: 0 auto 12px;
-      box-shadow: 0 4px 12px rgba(26,122,76,0.3);
-    }
-    .flow-step .step-title { font-weight: 600; font-size: 0.95rem; color: #1a2332; }
-    .flow-step .step-desc { font-size: 0.8rem; color: #6b7a8d; margin-top: 4px; }
-    .flow-arrow {
-      position: absolute; top: 44px; right: -12px;
-      font-size: 1.4rem; color: #c0c8d0; z-index: 1;
-    }
+    .flow-step:hover .num { transform: scale(1.15) rotate(10deg); }
+    .flow-step .ft { font-weight: 700; font-size: 1.1rem; color: #1a2332; }
+    .flow-step .fd { font-size: 0.9rem; color: #6b7a8d; margin-top: 4px; }
+    .flow-connector { display: flex; align-items: center; font-size: 1.8rem; color: #c0c8d0; }
+
+    /* ===== 核心特性 ===== */
     .feature-card {
-      border: 1px solid #eef1f4; border-radius: 14px; padding: 24px;
-      height: 100%; transition: all 0.2s; background: #fff;
+      border: 1px solid #eef1f4; border-radius: 16px; padding: 28px; height: 100%; background: #fff;
     }
-    .feature-card:hover { border-color: var(--brand-green); box-shadow: 0 6px 24px rgba(26,122,76,0.1); }
     .feature-icon {
-      width: 52px; height: 52px; border-radius: 12px;
-      display: flex; align-items: center; justify-content: center;
-      font-size: 1.5rem; margin-bottom: 14px;
+      width: 56px; height: 56px; border-radius: 14px; display: flex; align-items: center; justify-content: center;
+      font-size: 1.6rem; margin-bottom: 16px;
     }
-    .feature-title { font-weight: 700; font-size: 1.05rem; color: #1a2332; margin-bottom: 8px; }
-    .feature-desc { font-size: 0.88rem; color: #6b7a8d; line-height: 1.7; }
-    .spec-table th { background: #f7f9fb; color: #1a2332; font-weight: 600; font-size: 0.88rem; }
-    .spec-table td { font-size: 0.88rem; }
-    .spec-table .tag {
-      display: inline-block; padding: 2px 10px; border-radius: 10px;
-      font-size: 0.75rem; font-weight: 600;
-    }
-    .tag-sensor { background: #e3f2fd; color: #1565c0; }
-    .tag-actuator { background: #fce4ec; color: #c62828; }
-    .tag-control { background: #e8f5ee; color: #1a7a4c; }
-    .tag-comm { background: #fff3e0; color: #e65100; }
-    .growth-stage {
-      border-radius: 12px; padding: 20px; text-align: center; height: 100%;
-    }
+    .feature-title { font-weight: 700; font-size: 1.15rem; color: #1a2332; margin-bottom: 8px; }
+    .feature-desc { font-size: 0.92rem; color: #6b7a8d; line-height: 1.7; }
+    .stat-number { font-size: 2.4rem; font-weight: 800; background: linear-gradient(135deg, #1a7a4c, #2e9e6b); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+    .stat-label { font-size: 0.85rem; color: #6b7a8d; }
+
+    /* ===== 生长阶段 ===== */
+    .growth-stage { border-radius: 16px; padding: 28px; text-align: center; height: 100%; }
     .stage-germ { background: linear-gradient(135deg, #ffebee, #ffcdd2); }
-    .stage-cotyledon { background: linear-gradient(135deg, #fff8e1, #ffecb3); }
-    .stage-seedling { background: linear-gradient(135deg, #e8f5e9, #c8e6c9); }
-    .stage-icon { font-size: 2rem; margin-bottom: 8px; }
-    .stage-name { font-weight: 700; font-size: 1rem; }
-    .stage-led { font-size: 0.8rem; color: #555; margin-top: 6px; }
-    footer { background: #1a2332; color: #8b98a8; padding: 30px 0; font-size: 0.85rem; }
-    .navbar { backdrop-filter: blur(10px); background: rgba(255,255,255,0.95) !important; box-shadow: 0 2px 12px rgba(0,0,0,0.06); }
-    .navbar-brand { font-weight: 700; color: var(--brand-green) !important; }
-    .nav-link { font-size: 0.9rem; color: #4a5568 !important; }
+    .stage-cot { background: linear-gradient(135deg, #fff8e1, #ffecb3); }
+    .stage-seed { background: linear-gradient(135deg, #e8f5e9, #c8e6c9); }
+    .growth-stage .g-icon { font-size: 2.5rem; margin-bottom: 10px; }
+    .growth-stage .g-name { font-weight: 700; font-size: 1.2rem; }
+    .growth-stage .g-led { font-size: 0.9rem; color: #555; margin-top: 8px; }
+
+    /* ===== 技术参数 ===== */
+    .spec-table th { background: #f7f9fb; color: #1a2332; font-weight: 600; font-size: 0.95rem; }
+    .spec-table td { font-size: 0.92rem; }
+    .spec-table .tag { display: inline-block; padding: 3px 12px; border-radius: 10px; font-size: 0.8rem; font-weight: 600; }
+    .tag-ctrl { background: #e8f5ee; color: #1a7a4c; }
+    .tag-sens { background: #e3f2fd; color: #1565c0; }
+    .tag-act { background: #fce4ec; color: #c62828; }
+    .tag-comm { background: #fff3e0; color: #e65100; }
+
+    footer { background: #1a2332; color: #8b98a8; padding: 36px 0; font-size: 0.9rem; }
+    .navbar { backdrop-filter: blur(12px); background: rgba(255,255,255,0.92) !important; box-shadow: 0 2px 16px rgba(0,0,0,0.06); }
+    .navbar-brand { font-weight: 700; color: var(--brand-green) !important; font-size: 1.2rem; }
+    .nav-link { font-size: 0.95rem; color: #4a5568 !important; transition: color 0.2s; }
     .nav-link:hover { color: var(--brand-green) !important; }
+
     @media (max-width: 768px) {
-      .hero h1 { font-size: 1.8rem; }
-      .flow-arrow { display: none; }
-      .hero { padding: 50px 0 40px; }
+      .hero h1 { font-size: 2rem; }
+      .hero { min-height: auto; padding: 60px 0; }
+      .flow-connector { display: none; }
+      * { cursor: auto; }
+      .cursor-glow, .cursor-dot { display: none; }
     }
   </style>
 </head>
 <body>
+
+<!-- 鼠标跟随 -->
+<div class="cursor-glow" id="cursorGlow"></div>
+<div class="cursor-dot" id="cursorDot"></div>
+
+<!-- Preloader -->
+<div id="preloader">
+  <div class="seed-container">
+    <div class="seed"></div>
+    <div class="sprout"></div>
+    <div class="leaf-l"></div>
+    <div class="leaf-r"></div>
+  </div>
+  <div class="preloader-text">果树种子育苗系统</div>
+  <div class="preloader-bar"><div class="preloader-bar-fill"></div></div>
+</div>
 
 <!-- 导航栏 -->
 <nav class="navbar navbar-expand-lg sticky-top">
@@ -149,24 +212,24 @@
 
 <!-- Hero -->
 <section id="top" class="hero">
-  <div id="tsparticles"></div>
+  <canvas id="three-canvas"></canvas>
   <div class="container position-relative">
     <div class="row align-items-center">
       <div class="col-lg-8">
-        <span class="badge-soft bg-white bg-opacity-20 text-white mb-3 d-inline-block">
+        <span class="badge-soft bg-white bg-opacity-20 text-white mb-4 d-inline-block" data-aos="fade-up">
           <ion-icon name="hardware-chip"></ion-icon> STM32 下位机 · MATLAB 上位机 · YOLO 视觉识别
         </span>
-        <h1>果树种子育苗系统</h1>
-        <p class="lead mt-3">基于 STM32F103ZET6 与 MATLAB/YOLO 的全流程自动化育苗平台，覆盖萌芽期、子叶期、幼苗期三阶段闭环调控，实现精准滴灌、环境监测与生长识别一体化。</p>
-        <div class="d-flex flex-wrap gap-2 mt-4">
+        <h1 data-aos="fade-up" data-aos-delay="100">果树种子育苗系统</h1>
+        <p class="lead mt-4" data-aos="fade-up" data-aos-delay="200">基于 STM32F103ZET6 与 MATLAB/YOLO 的全流程自动化育苗平台，覆盖萌芽期、子叶期、幼苗期三阶段闭环调控，实现精准滴灌、环境监测与生长识别一体化。</p>
+        <div class="d-flex flex-wrap gap-3 mt-5" data-aos="fade-up" data-aos-delay="300">
           <span class="badge-soft bg-white bg-opacity-15 text-white"><ion-icon name="thermometer"></ion-icon> 温湿度闭环</span>
           <span class="badge-soft bg-white bg-opacity-15 text-white"><ion-icon name="eye"></ion-icon> YOLO 生长识别</span>
           <span class="badge-soft bg-white bg-opacity-15 text-white"><ion-icon name="water"></ion-icon> 精准滴灌</span>
           <span class="badge-soft bg-white bg-opacity-15 text-white"><ion-icon name="wifi"></ion-icon> WLAN 无线通信</span>
         </div>
       </div>
-      <div class="col-lg-4 d-none d-lg-block text-center">
-        <ion-icon name="leaf" style="font-size:8rem;opacity:0.25;"></ion-icon>
+      <div class="col-lg-4 d-none d-lg-block text-center" data-aos="zoom-in" data-aos-delay="400">
+        <div style="font-size:7rem;opacity:0.2;animation:float 3s ease-in-out infinite;">🌱</div>
       </div>
     </div>
   </div>
@@ -178,71 +241,38 @@
     <h2 class="section-title" data-aos="fade-down">系统架构</h2>
     <p class="section-sub" data-aos="fade-up" data-aos-delay="100">三层架构：上位机感知决策 → WLAN 通信链路 → 下位机采集执行</p>
     <div class="row g-4">
-      <!-- 上位机 -->
       <div class="col-lg-4 col-md-6" data-aos="fade-up" data-aos-delay="100">
-        <div class="card arch-card arch-upper">
+        <div class="card arch-card arch-upper tilt-card">
           <div class="card-header"><ion-icon name="desktop"></ion-icon> 上位机单元</div>
           <div class="card-body">
-            <div class="component-item">
-              <div class="icon" style="background:#e3f2fd;color:#1565c0;"><ion-icon name="camera"></ion-icon></div>
-              <div><div class="name">摄像头</div><div class="desc">育苗图像采集，实时画面输入</div></div>
-            </div>
-            <div class="component-item">
-              <div class="icon" style="background:#e3f2fd;color:#1565c0;"><ion-icon name="scan"></ion-icon></div>
-              <div><div class="name">YOLO 识别引擎</div><div class="desc">生长阶段分类 + 画面坐标检测</div></div>
-            </div>
-            <div class="component-item">
-              <div class="icon" style="background:#e3f2fd;color:#1565c0;"><ion-icon name="bar-chart"></ion-icon></div>
-              <div><div class="name">MATLAB 上位机</div><div class="desc">GUI 数据显示 · 参数记录 · 指令下发</div></div>
-            </div>
+            <div class="component-item"><div class="icon" style="background:#e3f2fd;color:#1565c0;"><ion-icon name="camera"></ion-icon></div><div><div class="name">摄像头</div><div class="desc">育苗图像采集，实时画面输入</div></div></div>
+            <div class="component-item"><div class="icon" style="background:#e3f2fd;color:#1565c0;"><ion-icon name="scan"></ion-icon></div><div><div class="name">YOLO 识别引擎</div><div class="desc">生长阶段分类 + 画面坐标检测</div></div></div>
+            <div class="component-item"><div class="icon" style="background:#e3f2fd;color:#1565c0;"><ion-icon name="bar-chart"></ion-icon></div><div><div class="name">MATLAB 上位机</div><div class="desc">GUI 数据显示 · 参数记录 · 指令下发</div></div></div>
           </div>
         </div>
       </div>
-      <!-- 通信 -->
       <div class="col-lg-4 col-md-6" data-aos="fade-up" data-aos-delay="250">
-        <div class="card arch-card arch-comm">
+        <div class="card arch-card arch-comm tilt-card">
           <div class="card-header"><ion-icon name="wifi"></ion-icon> WLAN 通信链路</div>
           <div class="card-body">
-            <div class="component-item">
-              <div class="icon" style="background:#fff3e0;color:#e65100;"><ion-icon name="server"></ion-icon></div>
-              <div><div class="name">WLAN 无线模块</div><div class="desc">WiFi 无线传输 · 双向数据交互</div></div>
-            </div>
+            <div class="component-item"><div class="icon" style="background:#fff3e0;color:#e65100;"><ion-icon name="server"></ion-icon></div><div><div class="name">WLAN 无线模块</div><div class="desc">WiFi 无线传输 · 双向数据交互</div></div></div>
             <div class="mt-3 p-3 rounded" style="background:#fff8f0;">
               <div class="fw-semibold small text-muted mb-2">数据流向</div>
-              <div class="d-flex align-items-center gap-2 small">
-                <span class="text-primary">传感器数据 ↑</span>
-                <ion-icon name="arrow-up" class="text-muted"></ion-icon>
-              </div>
-              <div class="d-flex align-items-center gap-2 small mt-1">
-                <span class="text-success">控制指令 ↓</span>
-                <ion-icon name="arrow-down" class="text-muted"></ion-icon>
-              </div>
+              <div class="d-flex align-items-center gap-2 small"><span class="text-primary">传感器数据 ↑</span></div>
+              <div class="d-flex align-items-center gap-2 small mt-1"><span class="text-success">控制指令 ↓</span></div>
               <div class="small text-muted mt-2">数据包带校验，防止指令解析出错</div>
             </div>
           </div>
         </div>
       </div>
-      <!-- 下位机 -->
       <div class="col-lg-4 col-md-12" data-aos="fade-up" data-aos-delay="400">
-        <div class="card arch-card arch-lower">
+        <div class="card arch-card arch-lower tilt-card">
           <div class="card-header"><ion-icon name="hardware-chip"></ion-icon> 下位机控制单元</div>
           <div class="card-body">
-            <div class="component-item">
-              <div class="icon" style="background:#e8f5ee;color:#1a7a4c;"><ion-icon name="hardware-chip"></ion-icon></div>
-              <div><div class="name">STM32F103ZET6</div><div class="desc">ARM Cortex-M3 主控 · Keil5 开发</div></div>
-            </div>
-            <div class="component-item">
-              <div class="icon" style="background:#e8f5ee;color:#1a7a4c;"><ion-icon name="thermometer"></ion-icon></div>
-              <div><div class="name">DHT22 温湿度</div><div class="desc">空气温度·湿度 · GPIO 采集</div></div>
-            </div>
-            <div class="component-item">
-              <div class="icon" style="background:#e8f5ee;color:#1a7a4c;"><ion-icon name="water"></ion-icon></div>
-              <div><div class="name">土壤湿度传感器</div><div class="desc">探针式 · ADC 采集</div></div>
-            </div>
-            <div class="component-item">
-              <div class="icon" style="background:#e8f5ee;color:#1a7a4c;"><ion-icon name="settings"></ion-icon></div>
-              <div><div class="name">执行机构 ×7</div><div class="desc">风扇·加热片·水泵·步进电机·伸缩杆·蜂鸣器·LED</div></div>
-            </div>
+            <div class="component-item"><div class="icon" style="background:#e8f5ee;color:#1a7a4c;"><ion-icon name="hardware-chip"></ion-icon></div><div><div class="name">STM32F103ZET6</div><div class="desc">ARM Cortex-M3 主控 · Keil5 开发</div></div></div>
+            <div class="component-item"><div class="icon" style="background:#e8f5ee;color:#1a7a4c;"><ion-icon name="thermometer"></ion-icon></div><div><div class="name">DHT22 温湿度</div><div class="desc">空气温度·湿度 · GPIO 采集</div></div></div>
+            <div class="component-item"><div class="icon" style="background:#e8f5ee;color:#1a7a4c;"><ion-icon name="water"></ion-icon></div><div><div class="name">土壤湿度传感器</div><div class="desc">探针式 · ADC 采集</div></div></div>
+            <div class="component-item"><div class="icon" style="background:#e8f5ee;color:#1a7a4c;"><ion-icon name="settings"></ion-icon></div><div><div class="name">执行机构 ×7</div><div class="desc">风扇·加热·水泵·步进·伸缩·蜂鸣·LED</div></div></div>
           </div>
         </div>
       </div>
@@ -256,62 +286,15 @@
     <h2 class="section-title" data-aos="fade-down">工作流程</h2>
     <p class="section-sub" data-aos="fade-up" data-aos-delay="100">从图像采集到执行调控的完整闭环</p>
     <div class="row g-2" data-aos="fade-up" data-aos-delay="150">
-      <div class="col-6 col-md-3">
-        <div class="flow-step">
-          <div class="flow-arrow d-none d-md-block"><ion-icon name="chevron-forward"></ion-icon></div>
-          <div class="step-num">1</div>
-          <div class="step-title">图像采集</div>
-          <div class="step-desc">摄像头实时采集育苗画面</div>
-        </div>
-      </div>
-      <div class="col-6 col-md-3">
-        <div class="flow-step">
-          <div class="flow-arrow d-none d-md-block"><ion-icon name="chevron-forward"></ion-icon></div>
-          <div class="step-num" style="background:#1565c0;">2</div>
-          <div class="step-title">YOLO 识别</div>
-          <div class="step-desc">识别生长阶段与幼苗坐标</div>
-        </div>
-      </div>
-      <div class="col-6 col-md-3">
-        <div class="flow-step">
-          <div class="flow-arrow d-none d-md-block"><ion-icon name="chevron-forward"></ion-icon></div>
-          <div class="step-num" style="background:#e65100;">3</div>
-          <div class="step-title">WLAN 下发</div>
-          <div class="step-desc">MATLAB 经无线网络发送指令</div>
-        </div>
-      </div>
-      <div class="col-6 col-md-3">
-        <div class="flow-step">
-          <div class="step-num" style="background:#c62828;">4</div>
-          <div class="step-title">执行调控</div>
-          <div class="step-desc">STM32 驱动执行机构动作</div>
-        </div>
-      </div>
+      <div class="col-6 col-md-3"><div class="flow-step"><div class="flow-connector d-none d-md-block" style="position:absolute;top:52px;right:-12px;"><ion-icon name="chevron-forward"></ion-icon></div><div class="num">1</div><div class="ft">图像采集</div><div class="fd">摄像头实时采集育苗画面</div></div></div>
+      <div class="col-6 col-md-3"><div class="flow-step"><div class="flow-connector d-none d-md-block" style="position:absolute;top:52px;right:-12px;"><ion-icon name="chevron-forward"></ion-icon></div><div class="num" style="background:#1565c0;">2</div><div class="ft">YOLO 识别</div><div class="fd">识别生长阶段与幼苗坐标</div></div></div>
+      <div class="col-6 col-md-3"><div class="flow-step"><div class="flow-connector d-none d-md-block" style="position:absolute;top:52px;right:-12px;"><ion-icon name="chevron-forward"></ion-icon></div><div class="num" style="background:#e65100;">3</div><div class="ft">WLAN 下发</div><div class="fd">MATLAB 经无线网络发送指令</div></div></div>
+      <div class="col-6 col-md-3"><div class="flow-step"><div class="num" style="background:#c62828;">4</div><div class="ft">执行调控</div><div class="fd">STM32 驱动执行机构动作</div></div></div>
     </div>
-    <div class="row g-2 mt-2" data-aos="fade-up" data-aos-delay="350">
-      <div class="col-6 col-md-3 offset-md-3">
-        <div class="flow-step">
-          <div class="flow-arrow d-none d-md-block"><ion-icon name="chevron-forward"></ion-icon></div>
-          <div class="step-num" style="background:#6a1b9a;">5</div>
-          <div class="step-title">传感采集</div>
-          <div class="step-desc">DHT22+土壤湿度实时采集</div>
-        </div>
-      </div>
-      <div class="col-6 col-md-3">
-        <div class="flow-step">
-          <div class="flow-arrow d-none d-md-block"><ion-icon name="chevron-forward"></ion-icon></div>
-          <div class="step-num" style="background:#00838f;">6</div>
-          <div class="step-title">数据回传</div>
-          <div class="step-desc">传感器数据上传至上位机</div>
-        </div>
-      </div>
-      <div class="col-6 col-md-3">
-        <div class="flow-step">
-          <div class="step-num" style="background:#2e7d32;">7</div>
-          <div class="step-title">闭环显示</div>
-          <div class="step-desc">MATLAB GUI 显示与记录</div>
-        </div>
-      </div>
+    <div class="row g-2 mt-3" data-aos="fade-up" data-aos-delay="350">
+      <div class="col-6 col-md-3 offset-md-3"><div class="flow-step"><div class="flow-connector d-none d-md-block" style="position:absolute;top:52px;right:-12px;"><ion-icon name="chevron-forward"></ion-icon></div><div class="num" style="background:#6a1b9a;">5</div><div class="ft">传感采集</div><div class="fd">DHT22+土壤湿度实时采集</div></div></div>
+      <div class="col-6 col-md-3"><div class="flow-step"><div class="flow-connector d-none d-md-block" style="position:absolute;top:52px;right:-12px;"><ion-icon name="chevron-forward"></ion-icon></div><div class="num" style="background:#00838f;">6</div><div class="ft">数据回传</div><div class="fd">传感器数据上传至上位机</div></div></div>
+      <div class="col-6 col-md-3"><div class="flow-step"><div class="num" style="background:#2e7d32;">7</div><div class="ft">闭环显示</div><div class="fd">GUI 显示与记录</div></div></div>
     </div>
   </div>
 </section>
@@ -321,35 +304,42 @@
   <div class="container">
     <h2 class="section-title" data-aos="fade-down">核心特性</h2>
     <p class="section-sub" data-aos="fade-up" data-aos-delay="100">四大核心能力，覆盖育苗全流程</p>
-    <div class="row g-4">
+    <div class="row g-4 mb-5">
       <div class="col-lg-3 col-md-6" data-aos="zoom-in" data-aos-delay="100">
-        <div class="feature-card">
+        <div class="feature-card tilt-card">
           <div class="feature-icon" style="background:#e3f2fd;color:#1565c0;"><ion-icon name="eye"></ion-icon></div>
           <div class="feature-title">视觉生长识别</div>
-          <div class="feature-desc">YOLO 模型实时识别幼苗所处生长阶段（萌芽/子叶/幼苗），并输出画面坐标，为精准滴灌提供定位依据。</div>
-        </div>
-      </div>
-      <div class="col-lg-3 col-md-6">
-        <div class="feature-card">
-          <div class="feature-icon" style="background:#e8f5ee;color:#1a7a4c;"><ion-icon name="water"></ion-icon></div>
-          <div class="feature-title">精准滴灌定位</div>
-          <div class="feature-desc">步进电机 X/Y 轴移动探针至 YOLO 输出坐标，伸缩杆下降检测土壤湿度，不足则启动水泵精准浇水。</div>
+          <div class="feature-desc">YOLO 模型实时识别幼苗所处生长阶段与画面坐标，为精准滴灌提供定位依据。</div>
         </div>
       </div>
       <div class="col-lg-3 col-md-6" data-aos="zoom-in" data-aos-delay="250">
-        <div class="feature-card">
-          <div class="feature-icon" style="background:#fff3e0;color:#e65100;"><ion-icon name="refresh"></ion-icon></div>
-          <div class="feature-title">环境闭环控制</div>
-          <div class="feature-desc">按生长期阈值自动驱动风扇散热、加热片加温、水泵增湿，蜂鸣器异常报警，无需人工干预。</div>
+        <div class="feature-card tilt-card">
+          <div class="feature-icon" style="background:#e8f5ee;color:#1a7a4c;"><ion-icon name="water"></ion-icon></div>
+          <div class="feature-title">精准滴灌定位</div>
+          <div class="feature-desc">步进电机 X/Y 轴移动探针至 YOLO 输出坐标，伸缩杆下降检测土壤湿度，不足则启动水泵。</div>
         </div>
       </div>
       <div class="col-lg-3 col-md-6" data-aos="zoom-in" data-aos-delay="400">
-        <div class="feature-card">
-          <div class="feature-icon" style="background:#fce4ec;color:#c62828;"><ion-icon name="document-text"></ion-icon></div>
-          <div class="feature-title">数据记录追溯</div>
-          <div class="feature-desc">MATLAB GUI 实时显示环境参数与设备状态，全程记录育苗数据，便于后续分析与育种优化。</div>
+        <div class="feature-card tilt-card">
+          <div class="feature-icon" style="background:#fff3e0;color:#e65100;"><ion-icon name="refresh"></ion-icon></div>
+          <div class="feature-title">环境闭环控制</div>
+          <div class="feature-desc">按生长期阈值自动驱动风扇散热、加热片加温、水泵增湿，蜂鸣器异常报警。</div>
         </div>
       </div>
+      <div class="col-lg-3 col-md-6" data-aos="zoom-in" data-aos-delay="550">
+        <div class="feature-card tilt-card">
+          <div class="feature-icon" style="background:#fce4ec;color:#c62828;"><ion-icon name="document-text"></ion-icon></div>
+          <div class="feature-title">数据记录追溯</div>
+          <div class="feature-desc">MATLAB GUI 实时显示环境参数与设备状态，全程记录育苗数据，便于育种优化。</div>
+        </div>
+      </div>
+    </div>
+    <!-- 数据指标滚动计数 -->
+    <div class="row g-4 text-center" id="stats-row">
+      <div class="col-md-3 col-6" data-aos="fade-up"><div class="stat-number" data-target="3">0</div><div class="stat-label">生长阶段识别</div></div>
+      <div class="col-md-3 col-6" data-aos="fade-up" data-aos-delay="100"><div class="stat-number" data-target="7">0</div><div class="stat-label">执行机构控制</div></div>
+      <div class="col-md-3 col-6" data-aos="fade-up" data-aos-delay="200"><div class="stat-number" data-target="115200">0</div><div class="stat-label">WLAN 传输速率 bps</div></div>
+      <div class="col-md-3 col-6" data-aos="fade-up" data-aos-delay="300"><div class="stat-number" data-target="24">0</div><div class="stat-label">小时全天候运行</div></div>
     </div>
   </div>
 </section>
@@ -361,28 +351,13 @@
     <p class="section-sub" data-aos="fade-up" data-aos-delay="100">YOLO 三分类，LED 指示灯对应显示</p>
     <div class="row g-4">
       <div class="col-md-4" data-aos="flip-left" data-aos-delay="100">
-        <div class="growth-stage stage-germ">
-          <div class="stage-icon">🌱</div>
-          <div class="stage-name">萌芽期</div>
-          <div class="stage-led"><ion-icon name="bulb" style="color:#e53935;"></ion-icon> LED 红灯指示</div>
-          <div class="small text-muted mt-2">种子破壳，幼芽初现，需保持高温高湿环境</div>
-        </div>
+        <div class="growth-stage stage-germ tilt-card"><div class="g-icon">🌱</div><div class="g-name">萌芽期</div><div class="g-led"><ion-icon name="bulb" style="color:#e53935;"></ion-icon> LED 红灯指示</div><div class="small text-muted mt-2">种子破壳，幼芽初现，需保持高温高湿环境</div></div>
       </div>
       <div class="col-md-4" data-aos="flip-left" data-aos-delay="250">
-        <div class="growth-stage stage-cotyledon">
-          <div class="stage-icon">🌿</div>
-          <div class="stage-name">子叶期</div>
-          <div class="stage-led"><ion-icon name="bulb" style="color:#fdd835;"></ion-icon> LED 黄灯指示</div>
-          <div class="small text-muted mt-2">子叶展开，开始光合作用，适度通风降温</div>
-        </div>
+        <div class="growth-stage stage-cot tilt-card"><div class="g-icon">🌿</div><div class="g-name">子叶期</div><div class="g-led"><ion-icon name="bulb" style="color:#fdd835;"></ion-icon> LED 黄灯指示</div><div class="small text-muted mt-2">子叶展开，开始光合作用，适度通风降温</div></div>
       </div>
       <div class="col-md-4" data-aos="flip-left" data-aos-delay="400">
-        <div class="growth-stage stage-seedling">
-          <div class="stage-icon">🌳</div>
-          <div class="stage-name">幼苗期</div>
-          <div class="stage-led"><ion-icon name="bulb" style="color:#43a047;"></ion-icon> LED 绿灯指示</div>
-          <div class="small text-muted mt-2">真叶生长，根系发达，精准滴灌促壮苗</div>
-        </div>
+        <div class="growth-stage stage-seed tilt-card"><div class="g-icon">🌳</div><div class="g-name">幼苗期</div><div class="g-led"><ion-icon name="bulb" style="color:#43a047;"></ion-icon> LED 绿灯指示</div><div class="small text-muted mt-2">真叶生长，根系发达，精准滴灌促壮苗</div></div>
       </div>
     </div>
   </div>
@@ -395,107 +370,21 @@
     <p class="section-sub" data-aos="fade-up" data-aos-delay="100">系统硬件与通信规格一览</p>
     <div class="table-responsive" data-aos="fade-up" data-aos-delay="200">
       <table class="table spec-table table-hover align-middle">
-        <thead>
-          <tr>
-            <th style="width:140px;">类别</th>
-            <th style="width:180px;">部件</th>
-            <th style="width:120px;">型号/规格</th>
-            <th>功能说明</th>
-            <th style="width:100px;">接口</th>
-          </tr>
-        </thead>
+        <thead><tr><th style="width:120px;">类别</th><th style="width:180px;">部件</th><th style="width:160px;">型号/规格</th><th>功能说明</th><th style="width:80px;">接口</th></tr></thead>
         <tbody>
-          <tr>
-            <td><span class="tag tag-control">主控</span></td>
-            <td>STM32 主控芯片</td>
-            <td>STM32F103ZET6</td>
-            <td>ARM Cortex-M3，系统核心控制器，Keil5 开发</td>
-            <td>—</td>
-          </tr>
-          <tr>
-            <td><span class="tag tag-sensor">传感器</span></td>
-            <td>空气温湿度</td>
-            <td>DHT22</td>
-            <td>采集育苗环境空气温度与湿度</td>
-            <td>GPIO</td>
-          </tr>
-          <tr>
-            <td><span class="tag tag-sensor">传感器</span></td>
-            <td>土壤湿度</td>
-            <td>探针式</td>
-            <td>检测土壤含水量，判断是否需要浇水</td>
-            <td>ADC</td>
-          </tr>
-          <tr>
-            <td><span class="tag tag-sensor">传感器</span></td>
-            <td>图像采集</td>
-            <td>USB 摄像头</td>
-            <td>实时采集育苗画面，供 YOLO 识别</td>
-            <td>USB</td>
-          </tr>
-          <tr>
-            <td><span class="tag tag-actuator">执行器</span></td>
-            <td>直流风扇</td>
-            <td>5V/12V</td>
-            <td>高温时散热降温，促进空气流通</td>
-            <td>继电器</td>
-          </tr>
-          <tr>
-            <td><span class="tag tag-actuator">执行器</span></td>
-            <td>加热片</td>
-            <td>—</td>
-            <td>低温环境下加温，维持适宜温度</td>
-            <td>继电器</td>
-          </tr>
-          <tr>
-            <td><span class="tag tag-actuator">执行器</span></td>
-            <td>直流水泵</td>
-            <td>—</td>
-            <td>浇水与空气增湿，带延时保护</td>
-            <td>继电器</td>
-          </tr>
-          <tr>
-            <td><span class="tag tag-actuator">执行器</span></td>
-            <td>步进电机模组</td>
-            <td>X/Y 双轴</td>
-            <td>移动探针至 YOLO 识别的幼苗坐标</td>
-            <td>PWM</td>
-          </tr>
-          <tr>
-            <td><span class="tag tag-actuator">执行器</span></td>
-            <td>伸缩杆</td>
-            <td>—</td>
-            <td>控制土壤探针升降，完成定点检测</td>
-            <td>GPIO</td>
-          </tr>
-          <tr>
-            <td><span class="tag tag-actuator">执行器</span></td>
-            <td>蜂鸣器</td>
-            <td>有源</td>
-            <td>温度/湿度异常时声光报警</td>
-            <td>IO</td>
-          </tr>
-          <tr>
-            <td><span class="tag tag-actuator">执行器</span></td>
-            <td>LED 状态灯</td>
-            <td>RGB/三色</td>
-            <td>红=萌芽期，黄=子叶期，绿=幼苗期</td>
-            <td>IO</td>
-          </tr>
-          <tr>
-            <td><span class="tag tag-comm">通信</span></td>
-            <td>上下位机通信</td>
-            <td>WLAN 无线模块</td>
-            <td>WiFi 无线传输，双向数据交互，数据包带校验</td>
-            <td>WiFi</td>
-          </tr>
-          <tr>
-            <td><span class="tag tag-control">上位机</span></td>
-            <td>识别与显示</td>
-            <td>MATLAB + YOLO</td>
-            <td>GUI 数据显示、YOLO 生长识别、参数记录、指令下发</td>
-            <td>—</td>
-          </tr>
+          <tr><td><span class="tag tag-ctrl">主控</span></td><td>STM32 主控芯片</td><td>STM32F103ZET6</td><td>ARM Cortex-M3，系统核心控制器，Keil5 开发</td><td>—</td></tr>
+          <tr><td><span class="tag tag-sens">传感器</span></td><td>空气温湿度</td><td>DHT22</td><td>采集育苗环境空气温度与湿度</td><td>GPIO</td></tr>
+          <tr><td><span class="tag tag-sens">传感器</span></td><td>土壤湿度</td><td>探针式</td><td>检测土壤含水量，判断是否需要浇水</td><td>ADC</td></tr>
+          <tr><td><span class="tag tag-sens">传感器</span></td><td>图像采集</td><td>USB 摄像头</td><td>实时采集育苗画面，供 YOLO 识别</td><td>USB</td></tr>
+          <tr><td><span class="tag tag-act">执行器</span></td><td>直流风扇</td><td>5V/12V</td><td>高温时散热降温，促进空气流通</td><td>继电器</td></tr>
+          <tr><td><span class="tag tag-act">执行器</span></td><td>加热片</td><td>—</td><td>低温环境下加温，维持适宜温度</td><td>继电器</td></tr>
+          <tr><td><span class="tag tag-act">执行器</span></td><td>直流水泵</td><td>—</td><td>浇水与空气增湿，带延时保护</td><td>继电器</td></tr>
+          <tr><td><span class="tag tag-act">执行器</span></td><td>步进电机模组</td><td>X/Y 双轴</td><td>移动探针至 YOLO 识别的幼苗坐标</td><td>PWM</td></tr>
+          <tr><td><span class="tag tag-act">执行器</span></td><td>伸缩杆</td><td>—</td><td>控制土壤探针升降，完成定点检测</td><td>GPIO</td></tr>
+          <tr><td><span class="tag tag-act">执行器</span></td><td>蜂鸣器</td><td>有源</td><td>温度/湿度异常时声光报警</td><td>IO</td></tr>
+          <tr><td><span class="tag tag-act">执行器</span></td><td>LED 状态灯</td><td>RGB/三色</td><td>红=萌芽期，黄=子叶期，绿=幼苗期</td><td>IO</td></tr>
+          <tr><td><span class="tag tag-comm">通信</span></td><td>上下位机通信</td><td>WLAN 无线模块</td><td>WiFi 无线传输，双向数据交互，数据包带校验</td><td>WiFi</td></tr>
+          <tr><td><span class="tag tag-ctrl">上位机</span></td><td>识别与显示</td><td>MATLAB + YOLO</td><td>GUI 数据显示、YOLO 生长识别、参数记录、指令下发</td><td>—</td></tr>
         </tbody>
       </table>
     </div>
@@ -520,27 +409,100 @@
 
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
 <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/tsparticles@2.12.0/tsparticles.bundle.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
 <script>
-  AOS.init({ duration: 700, easing: 'ease-out-cubic', once: true, offset: 80 });
-  tsParticles.load("tsparticles", {
-    fpsLimit: 60,
-    particles: {
-      number: { value: 45, density: { enable: true, area: 900 } },
-      color: { value: ["#ffffff", "#a5d6a7", "#81c784"] },
-      shape: { type: "circle" },
-      opacity: { value: 0.5, random: true, anim: { enable: true, speed: 0.5, opacity_min: 0.1 } },
-      size: { value: 3, random: true, anim: { enable: true, speed: 2, size_min: 0.5 } },
-      line_linked: { enable: true, distance: 140, color: "#ffffff", opacity: 0.15, width: 1 },
-      move: { enable: true, speed: 1.2, direction: "none", random: true, straight: false, out_mode: "out", bounce: false }
-    },
-    interactivity: {
-      detect_on: "canvas",
-      events: { onhover: { enable: true, mode: "grab" }, onclick: { enable: true, mode: "push" }, resize: true },
-      modes: { grab: { distance: 160, line_linked: { opacity: 0.4 } }, push: { particles_nb: 3 } }
-    },
-    retina_detect: true
+  // ===== Preloader =====
+  window.addEventListener('load', () => {
+    setTimeout(() => {
+      document.getElementById('preloader').classList.add('hide');
+      initAnimations();
+    }, 2200);
   });
+
+  function initAnimations() {
+    AOS.init({ duration: 700, easing: 'ease-out-cubic', once: true, offset: 80 });
+
+    // ===== 鼠标跟随光晕 =====
+    const glow = document.getElementById('cursorGlow');
+    const dot = document.getElementById('cursorDot');
+    let mx = 0, my = 0, gx = 0, gy = 0;
+    document.addEventListener('mousemove', e => { mx = e.clientX; my = e.clientY; dot.style.left = mx+'px'; dot.style.top = my+'px'; });
+    function animateGlow() { gx += (mx-gx)*0.08; gy += (my-gy)*0.08; glow.style.left = gx+'px'; glow.style.top = gy+'px'; requestAnimationFrame(animateGlow); }
+    animateGlow();
+
+    // ===== Three.js 3D 粒子背景 =====
+    const canvas = document.getElementById('three-canvas');
+    const scene = new THREE.Scene();
+    const camera = new THREE.PerspectiveCamera(75, canvas.offsetWidth/canvas.offsetHeight, 0.1, 1000);
+    const renderer = new THREE.WebGLRenderer({ canvas, alpha: true, antialias: true });
+    renderer.setSize(canvas.offsetWidth, canvas.offsetHeight);
+    renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+
+    const particlesGeometry = new THREE.BufferGeometry();
+    const count = 800;
+    const positions = new Float32Array(count * 3);
+    const colors = new Float32Array(count * 3);
+    for (let i = 0; i < count * 3; i += 3) {
+      const r = 4 + Math.random() * 6;
+      const theta = Math.random() * Math.PI * 2;
+      const phi = Math.random() * Math.PI;
+      positions[i] = r * Math.sin(phi) * Math.cos(theta);
+      positions[i+1] = r * Math.sin(phi) * Math.sin(theta);
+      positions[i+2] = r * Math.cos(phi);
+      const c = new THREE.Color();
+      c.setHSL(0.35 + Math.random()*0.15, 0.6, 0.5 + Math.random()*0.3);
+      colors[i] = c.r; colors[i+1] = c.g; colors[i+2] = c.b;
+    }
+    particlesGeometry.setAttribute('position', new THREE.BufferAttribute(positions, 3));
+    particlesGeometry.setAttribute('color', new THREE.BufferAttribute(colors, 3));
+    const particlesMaterial = new THREE.PointsMaterial({ size: 0.06, vertexColors: true, transparent: true, opacity: 0.8, blending: THREE.AdditiveBlending });
+    const particles = new THREE.Points(particlesGeometry, particlesMaterial);
+    scene.add(particles);
+    camera.position.z = 8;
+
+    let mouseX = 0, mouseY = 0;
+    document.addEventListener('mousemove', e => { mouseX = (e.clientX / window.innerWidth - 0.5) * 2; mouseY = (e.clientY / window.innerHeight - 0.5) * 2; });
+
+    function animateThree() {
+      requestAnimationFrame(animateThree);
+      particles.rotation.y += 0.0015;
+      particles.rotation.x += 0.0005;
+      particles.rotation.y += mouseX * 0.003;
+      particles.rotation.x += mouseY * 0.003;
+      renderer.render(scene, camera);
+    }
+    animateThree();
+    window.addEventListener('resize', () => { camera.aspect = canvas.offsetWidth/canvas.offsetHeight; camera.updateProjectionMatrix(); renderer.setSize(canvas.offsetWidth, canvas.offsetHeight); });
+
+    // ===== GSAP 数字滚动计数 =====
+    gsap.registerPlugin(ScrollTrigger);
+    document.querySelectorAll('.stat-number').forEach(el => {
+      const target = parseInt(el.dataset.target);
+      ScrollTrigger.create({
+        trigger: el, start: 'top 85%', once: true,
+        onEnter: () => {
+          gsap.to({ val: 0 }, { val: target, duration: 2, ease: 'power2.out',
+            onUpdate: function() { el.textContent = Math.floor(this.targets()[0].val).toLocaleString(); }
+          });
+        }
+      });
+    });
+
+    // ===== 卡片 3D 倾斜 =====
+    document.querySelectorAll('.tilt-card').forEach(card => {
+      card.addEventListener('mousemove', e => {
+        const rect = card.getBoundingClientRect();
+        const x = e.clientX - rect.left, y = e.clientY - rect.top;
+        const rotY = ((x / rect.width) - 0.5) * 12;
+        const rotX = ((y / rect.height) - 0.5) * -12;
+        card.style.transform = `perspective(800px) rotateX(${rotX}deg) rotateY(${rotY}deg) scale(1.03)`;
+      });
+      card.addEventListener('mouseleave', () => { card.style.transform = 'perspective(800px) rotateX(0) rotateY(0) scale(1)'; });
+    });
+  }
 </script>
+<style>@keyframes float { 0%,100%{transform:translateY(0)} 50%{transform:translateY(-20px)} }</style>
 </body>
 </html>
