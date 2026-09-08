@@ -1,0 +1,517 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>果树种子育苗系统 - 技术展示</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" rel="stylesheet">
+  <style>
+    :root {
+      --brand-green: #1a7a4c;
+      --brand-green-light: #e8f5ee;
+      --brand-blue: #1565c0;
+      --brand-blue-light: #e3f2fd;
+    }
+    body { font-family: "Microsoft YaHei", "PingFang SC", sans-serif; scroll-behavior: smooth; }
+    .hero {
+      background: linear-gradient(135deg, #0d3b2e 0%, #1a7a4c 50%, #2e9e6b 100%);
+      color: #fff;
+      padding: 80px 0 60px;
+      position: relative;
+      overflow: hidden;
+    }
+    .hero::before {
+      content: '';
+      position: absolute;
+      top: -50%; right: -20%;
+      width: 600px; height: 600px;
+      background: radial-gradient(circle, rgba(255,255,255,0.08) 0%, transparent 70%);
+      border-radius: 50%;
+    }
+    .hero h1 { font-size: 2.8rem; font-weight: 700; letter-spacing: 2px; }
+    .hero .lead { font-size: 1.15rem; opacity: 0.9; max-width: 640px; }
+    .badge-soft { font-size: 0.8rem; padding: 6px 14px; border-radius: 20px; }
+    .section-title {
+      font-size: 1.6rem; font-weight: 700; color: #1a2332;
+      border-left: 4px solid var(--brand-green);
+      padding-left: 14px; margin-bottom: 8px;
+    }
+    .section-sub { color: #6b7a8d; font-size: 0.95rem; margin-bottom: 28px; }
+    .arch-card {
+      border: none; border-radius: 14px; box-shadow: 0 4px 20px rgba(0,0,0,0.06);
+      transition: transform 0.2s, box-shadow 0.2s; height: 100%;
+    }
+    .arch-card:hover { transform: translateY(-4px); box-shadow: 0 8px 30px rgba(0,0,0,0.1); }
+    .arch-card .card-header {
+      border-radius: 14px 14px 0 0 !important; font-weight: 600; font-size: 1rem;
+      padding: 14px 18px;
+    }
+    .arch-upper .card-header { background: var(--brand-blue-light); color: var(--brand-blue); }
+    .arch-comm .card-header { background: #fff3e0; color: #e65100; }
+    .arch-lower .card-header { background: var(--brand-green-light); color: var(--brand-green); }
+    .component-item {
+      display: flex; align-items: flex-start; gap: 10px;
+      padding: 8px 0; border-bottom: 1px dashed #eef1f4;
+    }
+    .component-item:last-child { border-bottom: none; }
+    .component-item .icon {
+      width: 32px; height: 32px; border-radius: 8px;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 0.9rem; flex-shrink: 0;
+    }
+    .component-item .name { font-weight: 600; font-size: 0.9rem; color: #1a2332; }
+    .component-item .desc { font-size: 0.8rem; color: #6b7a8d; }
+    .flow-step {
+      position: relative; text-align: center; padding: 20px 10px;
+    }
+    .flow-step .step-num {
+      width: 48px; height: 48px; border-radius: 50%;
+      background: var(--brand-green); color: #fff;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 1.2rem; font-weight: 700; margin: 0 auto 12px;
+      box-shadow: 0 4px 12px rgba(26,122,76,0.3);
+    }
+    .flow-step .step-title { font-weight: 600; font-size: 0.95rem; color: #1a2332; }
+    .flow-step .step-desc { font-size: 0.8rem; color: #6b7a8d; margin-top: 4px; }
+    .flow-arrow {
+      position: absolute; top: 44px; right: -12px;
+      font-size: 1.4rem; color: #c0c8d0; z-index: 1;
+    }
+    .feature-card {
+      border: 1px solid #eef1f4; border-radius: 14px; padding: 24px;
+      height: 100%; transition: all 0.2s; background: #fff;
+    }
+    .feature-card:hover { border-color: var(--brand-green); box-shadow: 0 6px 24px rgba(26,122,76,0.1); }
+    .feature-icon {
+      width: 52px; height: 52px; border-radius: 12px;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 1.5rem; margin-bottom: 14px;
+    }
+    .feature-title { font-weight: 700; font-size: 1.05rem; color: #1a2332; margin-bottom: 8px; }
+    .feature-desc { font-size: 0.88rem; color: #6b7a8d; line-height: 1.7; }
+    .spec-table th { background: #f7f9fb; color: #1a2332; font-weight: 600; font-size: 0.88rem; }
+    .spec-table td { font-size: 0.88rem; }
+    .spec-table .tag {
+      display: inline-block; padding: 2px 10px; border-radius: 10px;
+      font-size: 0.75rem; font-weight: 600;
+    }
+    .tag-sensor { background: #e3f2fd; color: #1565c0; }
+    .tag-actuator { background: #fce4ec; color: #c62828; }
+    .tag-control { background: #e8f5ee; color: #1a7a4c; }
+    .tag-comm { background: #fff3e0; color: #e65100; }
+    .growth-stage {
+      border-radius: 12px; padding: 20px; text-align: center; height: 100%;
+    }
+    .stage-germ { background: linear-gradient(135deg, #ffebee, #ffcdd2); }
+    .stage-cotyledon { background: linear-gradient(135deg, #fff8e1, #ffecb3); }
+    .stage-seedling { background: linear-gradient(135deg, #e8f5e9, #c8e6c9); }
+    .stage-icon { font-size: 2rem; margin-bottom: 8px; }
+    .stage-name { font-weight: 700; font-size: 1rem; }
+    .stage-led { font-size: 0.8rem; color: #555; margin-top: 6px; }
+    footer { background: #1a2332; color: #8b98a8; padding: 30px 0; font-size: 0.85rem; }
+    .navbar { backdrop-filter: blur(10px); background: rgba(255,255,255,0.95) !important; box-shadow: 0 2px 12px rgba(0,0,0,0.06); }
+    .navbar-brand { font-weight: 700; color: var(--brand-green) !important; }
+    .nav-link { font-size: 0.9rem; color: #4a5568 !important; }
+    .nav-link:hover { color: var(--brand-green) !important; }
+    @media (max-width: 768px) {
+      .hero h1 { font-size: 1.8rem; }
+      .flow-arrow { display: none; }
+      .hero { padding: 50px 0 40px; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- 导航栏 -->
+<nav class="navbar navbar-expand-lg sticky-top">
+  <div class="container">
+    <a class="navbar-brand" href="#top"><i class="bi bi-flower1"></i> 果树种子育苗系统</a>
+    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navMenu">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="collapse navbar-collapse" id="navMenu">
+      <ul class="navbar-nav ms-auto">
+        <li class="nav-item"><a class="nav-link" href="#architecture">系统架构</a></li>
+        <li class="nav-item"><a class="nav-link" href="#workflow">工作流程</a></li>
+        <li class="nav-item"><a class="nav-link" href="#features">核心特性</a></li>
+        <li class="nav-item"><a class="nav-link" href="#specs">技术参数</a></li>
+        <li class="nav-item"><a class="nav-link" href="#growth">生长阶段</a></li>
+      </ul>
+    </div>
+  </div>
+</nav>
+
+<!-- Hero -->
+<section id="top" class="hero">
+  <div class="container position-relative">
+    <div class="row align-items-center">
+      <div class="col-lg-8">
+        <span class="badge-soft bg-white bg-opacity-20 text-white mb-3 d-inline-block">
+          <i class="bi bi-cpu"></i> STM32 下位机 · MATLAB 上位机 · YOLO 视觉识别
+        </span>
+        <h1>果树种子育苗系统</h1>
+        <p class="lead mt-3">基于 STM32F103ZET6 与 MATLAB/YOLO 的全流程自动化育苗平台，覆盖萌芽期、子叶期、幼苗期三阶段闭环调控，实现精准滴灌、环境监测与生长识别一体化。</p>
+        <div class="d-flex flex-wrap gap-2 mt-4">
+          <span class="badge-soft bg-white bg-opacity-15 text-white"><i class="bi bi-thermometer-half"></i> 温湿度闭环</span>
+          <span class="badge-soft bg-white bg-opacity-15 text-white"><i class="bi bi-eye"></i> YOLO 生长识别</span>
+          <span class="badge-soft bg-white bg-opacity-15 text-white"><i class="bi bi-droplet"></i> 精准滴灌</span>
+          <span class="badge-soft bg-white bg-opacity-15 text-white"><i class="bi bi-wifi"></i> WLAN 无线通信</span>
+        </div>
+      </div>
+      <div class="col-lg-4 d-none d-lg-block text-center">
+        <i class="bi bi-flower1" style="font-size:8rem;opacity:0.25;"></i>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- 系统架构 -->
+<section id="architecture" class="py-5 bg-light">
+  <div class="container">
+    <h2 class="section-title">系统架构</h2>
+    <p class="section-sub">三层架构：上位机感知决策 → WLAN 通信链路 → 下位机采集执行</p>
+    <div class="row g-4">
+      <!-- 上位机 -->
+      <div class="col-lg-4 col-md-6">
+        <div class="card arch-card arch-upper">
+          <div class="card-header"><i class="bi bi-display"></i> 上位机单元</div>
+          <div class="card-body">
+            <div class="component-item">
+              <div class="icon" style="background:#e3f2fd;color:#1565c0;"><i class="bi bi-camera"></i></div>
+              <div><div class="name">摄像头</div><div class="desc">育苗图像采集，实时画面输入</div></div>
+            </div>
+            <div class="component-item">
+              <div class="icon" style="background:#e3f2fd;color:#1565c0;"><i class="bi bi-bounding-box"></i></div>
+              <div><div class="name">YOLO 识别引擎</div><div class="desc">生长阶段分类 + 画面坐标检测</div></div>
+            </div>
+            <div class="component-item">
+              <div class="icon" style="background:#e3f2fd;color:#1565c0;"><i class="bi bi-graph-up"></i></div>
+              <div><div class="name">MATLAB 上位机</div><div class="desc">GUI 数据显示 · 参数记录 · 指令下发</div></div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <!-- 通信 -->
+      <div class="col-lg-4 col-md-6">
+        <div class="card arch-card arch-comm">
+          <div class="card-header"><i class="bi bi-wifi"></i> WLAN 通信链路</div>
+          <div class="card-body">
+            <div class="component-item">
+              <div class="icon" style="background:#fff3e0;color:#e65100;"><i class="bi bi-router"></i></div>
+              <div><div class="name">WLAN 无线模块</div><div class="desc">WiFi 无线传输 · 双向数据交互</div></div>
+            </div>
+            <div class="mt-3 p-3 rounded" style="background:#fff8f0;">
+              <div class="fw-semibold small text-muted mb-2">数据流向</div>
+              <div class="d-flex align-items-center gap-2 small">
+                <span class="text-primary">传感器数据 ↑</span>
+                <i class="bi bi-arrow-up text-muted"></i>
+              </div>
+              <div class="d-flex align-items-center gap-2 small mt-1">
+                <span class="text-success">控制指令 ↓</span>
+                <i class="bi bi-arrow-down text-muted"></i>
+              </div>
+              <div class="small text-muted mt-2">数据包带校验，防止指令解析出错</div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <!-- 下位机 -->
+      <div class="col-lg-4 col-md-12">
+        <div class="card arch-card arch-lower">
+          <div class="card-header"><i class="bi bi-motherboard"></i> 下位机控制单元</div>
+          <div class="card-body">
+            <div class="component-item">
+              <div class="icon" style="background:#e8f5ee;color:#1a7a4c;"><i class="bi bi-cpu"></i></div>
+              <div><div class="name">STM32F103ZET6</div><div class="desc">ARM Cortex-M3 主控 · Keil5 开发</div></div>
+            </div>
+            <div class="component-item">
+              <div class="icon" style="background:#e8f5ee;color:#1a7a4c;"><i class="bi bi-thermometer-half"></i></div>
+              <div><div class="name">DHT22 温湿度</div><div class="desc">空气温度·湿度 · GPIO 采集</div></div>
+            </div>
+            <div class="component-item">
+              <div class="icon" style="background:#e8f5ee;color:#1a7a4c;"><i class="bi bi-droplet"></i></div>
+              <div><div class="name">土壤湿度传感器</div><div class="desc">探针式 · ADC 采集</div></div>
+            </div>
+            <div class="component-item">
+              <div class="icon" style="background:#e8f5ee;color:#1a7a4c;"><i class="bi bi-gear"></i></div>
+              <div><div class="name">执行机构 ×7</div><div class="desc">风扇·加热片·水泵·步进电机·伸缩杆·蜂鸣器·LED</div></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- 工作流程 -->
+<section id="workflow" class="py-5">
+  <div class="container">
+    <h2 class="section-title">工作流程</h2>
+    <p class="section-sub">从图像采集到执行调控的完整闭环</p>
+    <div class="row g-2">
+      <div class="col-6 col-md-3">
+        <div class="flow-step">
+          <div class="flow-arrow d-none d-md-block"><i class="bi bi-chevron-right"></i></div>
+          <div class="step-num">1</div>
+          <div class="step-title">图像采集</div>
+          <div class="step-desc">摄像头实时采集育苗画面</div>
+        </div>
+      </div>
+      <div class="col-6 col-md-3">
+        <div class="flow-step">
+          <div class="flow-arrow d-none d-md-block"><i class="bi bi-chevron-right"></i></div>
+          <div class="step-num" style="background:#1565c0;">2</div>
+          <div class="step-title">YOLO 识别</div>
+          <div class="step-desc">识别生长阶段与幼苗坐标</div>
+        </div>
+      </div>
+      <div class="col-6 col-md-3">
+        <div class="flow-step">
+          <div class="flow-arrow d-none d-md-block"><i class="bi bi-chevron-right"></i></div>
+          <div class="step-num" style="background:#e65100;">3</div>
+          <div class="step-title">WLAN 下发</div>
+          <div class="step-desc">MATLAB 经无线网络发送指令</div>
+        </div>
+      </div>
+      <div class="col-6 col-md-3">
+        <div class="flow-step">
+          <div class="step-num" style="background:#c62828;">4</div>
+          <div class="step-title">执行调控</div>
+          <div class="step-desc">STM32 驱动执行机构动作</div>
+        </div>
+      </div>
+    </div>
+    <div class="row g-2 mt-2">
+      <div class="col-6 col-md-3 offset-md-3">
+        <div class="flow-step">
+          <div class="flow-arrow d-none d-md-block"><i class="bi bi-chevron-right"></i></div>
+          <div class="step-num" style="background:#6a1b9a;">5</div>
+          <div class="step-title">传感采集</div>
+          <div class="step-desc">DHT22+土壤湿度实时采集</div>
+        </div>
+      </div>
+      <div class="col-6 col-md-3">
+        <div class="flow-step">
+          <div class="flow-arrow d-none d-md-block"><i class="bi bi-chevron-right"></i></div>
+          <div class="step-num" style="background:#00838f;">6</div>
+          <div class="step-title">数据回传</div>
+          <div class="step-desc">传感器数据上传至上位机</div>
+        </div>
+      </div>
+      <div class="col-6 col-md-3">
+        <div class="flow-step">
+          <div class="step-num" style="background:#2e7d32;">7</div>
+          <div class="step-title">闭环显示</div>
+          <div class="step-desc">MATLAB GUI 显示与记录</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- 核心特性 -->
+<section id="features" class="py-5 bg-light">
+  <div class="container">
+    <h2 class="section-title">核心特性</h2>
+    <p class="section-sub">四大核心能力，覆盖育苗全流程</p>
+    <div class="row g-4">
+      <div class="col-lg-3 col-md-6">
+        <div class="feature-card">
+          <div class="feature-icon" style="background:#e3f2fd;color:#1565c0;"><i class="bi bi-eye"></i></div>
+          <div class="feature-title">视觉生长识别</div>
+          <div class="feature-desc">YOLO 模型实时识别幼苗所处生长阶段（萌芽/子叶/幼苗），并输出画面坐标，为精准滴灌提供定位依据。</div>
+        </div>
+      </div>
+      <div class="col-lg-3 col-md-6">
+        <div class="feature-card">
+          <div class="feature-icon" style="background:#e8f5ee;color:#1a7a4c;"><i class="bi bi-droplet"></i></div>
+          <div class="feature-title">精准滴灌定位</div>
+          <div class="feature-desc">步进电机 X/Y 轴移动探针至 YOLO 输出坐标，伸缩杆下降检测土壤湿度，不足则启动水泵精准浇水。</div>
+        </div>
+      </div>
+      <div class="col-lg-3 col-md-6">
+        <div class="feature-card">
+          <div class="feature-icon" style="background:#fff3e0;color:#e65100;"><i class="bi bi-arrow-repeat"></i></div>
+          <div class="feature-title">环境闭环控制</div>
+          <div class="feature-desc">按生长期阈值自动驱动风扇散热、加热片加温、水泵增湿，蜂鸣器异常报警，无需人工干预。</div>
+        </div>
+      </div>
+      <div class="col-lg-3 col-md-6">
+        <div class="feature-card">
+          <div class="feature-icon" style="background:#fce4ec;color:#c62828;"><i class="bi bi-journal-text"></i></div>
+          <div class="feature-title">数据记录追溯</div>
+          <div class="feature-desc">MATLAB GUI 实时显示环境参数与设备状态，全程记录育苗数据，便于后续分析与育种优化。</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- 生长阶段 -->
+<section id="growth" class="py-5">
+  <div class="container">
+    <h2 class="section-title">生长阶段识别</h2>
+    <p class="section-sub">YOLO 三分类，LED 指示灯对应显示</p>
+    <div class="row g-4">
+      <div class="col-md-4">
+        <div class="growth-stage stage-germ">
+          <div class="stage-icon">🌱</div>
+          <div class="stage-name">萌芽期</div>
+          <div class="stage-led"><i class="bi bi-lightbulb" style="color:#e53935;"></i> LED 红灯指示</div>
+          <div class="small text-muted mt-2">种子破壳，幼芽初现，需保持高温高湿环境</div>
+        </div>
+      </div>
+      <div class="col-md-4">
+        <div class="growth-stage stage-cotyledon">
+          <div class="stage-icon">🌿</div>
+          <div class="stage-name">子叶期</div>
+          <div class="stage-led"><i class="bi bi-lightbulb" style="color:#fdd835;"></i> LED 黄灯指示</div>
+          <div class="small text-muted mt-2">子叶展开，开始光合作用，适度通风降温</div>
+        </div>
+      </div>
+      <div class="col-md-4">
+        <div class="growth-stage stage-seedling">
+          <div class="stage-icon">🌳</div>
+          <div class="stage-name">幼苗期</div>
+          <div class="stage-led"><i class="bi bi-lightbulb" style="color:#43a047;"></i> LED 绿灯指示</div>
+          <div class="small text-muted mt-2">真叶生长，根系发达，精准滴灌促壮苗</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- 技术参数 -->
+<section id="specs" class="py-5 bg-light">
+  <div class="container">
+    <h2 class="section-title">技术参数</h2>
+    <p class="section-sub">系统硬件与通信规格一览</p>
+    <div class="table-responsive">
+      <table class="table spec-table table-hover align-middle">
+        <thead>
+          <tr>
+            <th style="width:140px;">类别</th>
+            <th style="width:180px;">部件</th>
+            <th style="width:120px;">型号/规格</th>
+            <th>功能说明</th>
+            <th style="width:100px;">接口</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><span class="tag tag-control">主控</span></td>
+            <td>STM32 主控芯片</td>
+            <td>STM32F103ZET6</td>
+            <td>ARM Cortex-M3，系统核心控制器，Keil5 开发</td>
+            <td>—</td>
+          </tr>
+          <tr>
+            <td><span class="tag tag-sensor">传感器</span></td>
+            <td>空气温湿度</td>
+            <td>DHT22</td>
+            <td>采集育苗环境空气温度与湿度</td>
+            <td>GPIO</td>
+          </tr>
+          <tr>
+            <td><span class="tag tag-sensor">传感器</span></td>
+            <td>土壤湿度</td>
+            <td>探针式</td>
+            <td>检测土壤含水量，判断是否需要浇水</td>
+            <td>ADC</td>
+          </tr>
+          <tr>
+            <td><span class="tag tag-sensor">传感器</span></td>
+            <td>图像采集</td>
+            <td>USB 摄像头</td>
+            <td>实时采集育苗画面，供 YOLO 识别</td>
+            <td>USB</td>
+          </tr>
+          <tr>
+            <td><span class="tag tag-actuator">执行器</span></td>
+            <td>直流风扇</td>
+            <td>5V/12V</td>
+            <td>高温时散热降温，促进空气流通</td>
+            <td>继电器</td>
+          </tr>
+          <tr>
+            <td><span class="tag tag-actuator">执行器</span></td>
+            <td>加热片</td>
+            <td>—</td>
+            <td>低温环境下加温，维持适宜温度</td>
+            <td>继电器</td>
+          </tr>
+          <tr>
+            <td><span class="tag tag-actuator">执行器</span></td>
+            <td>直流水泵</td>
+            <td>—</td>
+            <td>浇水与空气增湿，带延时保护</td>
+            <td>继电器</td>
+          </tr>
+          <tr>
+            <td><span class="tag tag-actuator">执行器</span></td>
+            <td>步进电机模组</td>
+            <td>X/Y 双轴</td>
+            <td>移动探针至 YOLO 识别的幼苗坐标</td>
+            <td>PWM</td>
+          </tr>
+          <tr>
+            <td><span class="tag tag-actuator">执行器</span></td>
+            <td>伸缩杆</td>
+            <td>—</td>
+            <td>控制土壤探针升降，完成定点检测</td>
+            <td>GPIO</td>
+          </tr>
+          <tr>
+            <td><span class="tag tag-actuator">执行器</span></td>
+            <td>蜂鸣器</td>
+            <td>有源</td>
+            <td>温度/湿度异常时声光报警</td>
+            <td>IO</td>
+          </tr>
+          <tr>
+            <td><span class="tag tag-actuator">执行器</span></td>
+            <td>LED 状态灯</td>
+            <td>RGB/三色</td>
+            <td>红=萌芽期，黄=子叶期，绿=幼苗期</td>
+            <td>IO</td>
+          </tr>
+          <tr>
+            <td><span class="tag tag-comm">通信</span></td>
+            <td>上下位机通信</td>
+            <td>WLAN 无线模块</td>
+            <td>WiFi 无线传输，双向数据交互，数据包带校验</td>
+            <td>WiFi</td>
+          </tr>
+          <tr>
+            <td><span class="tag tag-control">上位机</span></td>
+            <td>识别与显示</td>
+            <td>MATLAB + YOLO</td>
+            <td>GUI 数据显示、YOLO 生长识别、参数记录、指令下发</td>
+            <td>—</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</section>
+
+<!-- 页脚 -->
+<footer>
+  <div class="container">
+    <div class="row">
+      <div class="col-md-6">
+        <div class="fw-bold text-white mb-2"><i class="bi bi-flower1"></i> 果树种子育苗系统</div>
+        <p class="mb-0">STM32F103ZET6 下位机 + MATLAB/YOLO 上位机 · 全流程自动化育苗平台</p>
+      </div>
+      <div class="col-md-6 text-md-end mt-3 mt-md-0">
+        <p class="mb-1">萌芽期 · 子叶期 · 幼苗期 三阶段闭环调控</p>
+        <p class="mb-0">精准滴灌 · 环境监测 · 生长识别 · 数据记录</p>
+      </div>
+    </div>
+  </div>
+</footer>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>
