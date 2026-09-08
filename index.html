@@ -5,6 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>果树种子育苗系统 - 技术展示</title>
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
   <script type="module" src="https://unpkg.com/ionicons@7/dist/ionicons/ionicons.esm.js"></script>
   <script nomodule src="https://unpkg.com/ionicons@7/dist/ionicons/ionicons.js"></script>
   <style>
@@ -16,6 +17,8 @@
     }
     body { font-family: "Microsoft YaHei", "PingFang SC", sans-serif; scroll-behavior: smooth; }
     ion-icon { vertical-align: middle; }
+    #tsparticles { position: absolute; inset: 0; z-index: 0; }
+    .hero > .container { position: relative; z-index: 1; }
     .hero {
       background: linear-gradient(135deg, #0d3b2e 0%, #1a7a4c 50%, #2e9e6b 100%);
       color: #fff;
@@ -146,6 +149,7 @@
 
 <!-- Hero -->
 <section id="top" class="hero">
+  <div id="tsparticles"></div>
   <div class="container position-relative">
     <div class="row align-items-center">
       <div class="col-lg-8">
@@ -171,11 +175,11 @@
 <!-- 系统架构 -->
 <section id="architecture" class="py-5 bg-light">
   <div class="container">
-    <h2 class="section-title">系统架构</h2>
-    <p class="section-sub">三层架构：上位机感知决策 → WLAN 通信链路 → 下位机采集执行</p>
+    <h2 class="section-title" data-aos="fade-down">系统架构</h2>
+    <p class="section-sub" data-aos="fade-up" data-aos-delay="100">三层架构：上位机感知决策 → WLAN 通信链路 → 下位机采集执行</p>
     <div class="row g-4">
       <!-- 上位机 -->
-      <div class="col-lg-4 col-md-6">
+      <div class="col-lg-4 col-md-6" data-aos="fade-up" data-aos-delay="100">
         <div class="card arch-card arch-upper">
           <div class="card-header"><ion-icon name="desktop"></ion-icon> 上位机单元</div>
           <div class="card-body">
@@ -195,7 +199,7 @@
         </div>
       </div>
       <!-- 通信 -->
-      <div class="col-lg-4 col-md-6">
+      <div class="col-lg-4 col-md-6" data-aos="fade-up" data-aos-delay="250">
         <div class="card arch-card arch-comm">
           <div class="card-header"><ion-icon name="wifi"></ion-icon> WLAN 通信链路</div>
           <div class="card-body">
@@ -219,7 +223,7 @@
         </div>
       </div>
       <!-- 下位机 -->
-      <div class="col-lg-4 col-md-12">
+      <div class="col-lg-4 col-md-12" data-aos="fade-up" data-aos-delay="400">
         <div class="card arch-card arch-lower">
           <div class="card-header"><ion-icon name="hardware-chip"></ion-icon> 下位机控制单元</div>
           <div class="card-body">
@@ -249,9 +253,9 @@
 <!-- 工作流程 -->
 <section id="workflow" class="py-5">
   <div class="container">
-    <h2 class="section-title">工作流程</h2>
-    <p class="section-sub">从图像采集到执行调控的完整闭环</p>
-    <div class="row g-2">
+    <h2 class="section-title" data-aos="fade-down">工作流程</h2>
+    <p class="section-sub" data-aos="fade-up" data-aos-delay="100">从图像采集到执行调控的完整闭环</p>
+    <div class="row g-2" data-aos="fade-up" data-aos-delay="150">
       <div class="col-6 col-md-3">
         <div class="flow-step">
           <div class="flow-arrow d-none d-md-block"><ion-icon name="chevron-forward"></ion-icon></div>
@@ -284,7 +288,7 @@
         </div>
       </div>
     </div>
-    <div class="row g-2 mt-2">
+    <div class="row g-2 mt-2" data-aos="fade-up" data-aos-delay="350">
       <div class="col-6 col-md-3 offset-md-3">
         <div class="flow-step">
           <div class="flow-arrow d-none d-md-block"><ion-icon name="chevron-forward"></ion-icon></div>
@@ -315,10 +319,10 @@
 <!-- 核心特性 -->
 <section id="features" class="py-5 bg-light">
   <div class="container">
-    <h2 class="section-title">核心特性</h2>
-    <p class="section-sub">四大核心能力，覆盖育苗全流程</p>
+    <h2 class="section-title" data-aos="fade-down">核心特性</h2>
+    <p class="section-sub" data-aos="fade-up" data-aos-delay="100">四大核心能力，覆盖育苗全流程</p>
     <div class="row g-4">
-      <div class="col-lg-3 col-md-6">
+      <div class="col-lg-3 col-md-6" data-aos="zoom-in" data-aos-delay="100">
         <div class="feature-card">
           <div class="feature-icon" style="background:#e3f2fd;color:#1565c0;"><ion-icon name="eye"></ion-icon></div>
           <div class="feature-title">视觉生长识别</div>
@@ -332,14 +336,14 @@
           <div class="feature-desc">步进电机 X/Y 轴移动探针至 YOLO 输出坐标，伸缩杆下降检测土壤湿度，不足则启动水泵精准浇水。</div>
         </div>
       </div>
-      <div class="col-lg-3 col-md-6">
+      <div class="col-lg-3 col-md-6" data-aos="zoom-in" data-aos-delay="250">
         <div class="feature-card">
           <div class="feature-icon" style="background:#fff3e0;color:#e65100;"><ion-icon name="refresh"></ion-icon></div>
           <div class="feature-title">环境闭环控制</div>
           <div class="feature-desc">按生长期阈值自动驱动风扇散热、加热片加温、水泵增湿，蜂鸣器异常报警，无需人工干预。</div>
         </div>
       </div>
-      <div class="col-lg-3 col-md-6">
+      <div class="col-lg-3 col-md-6" data-aos="zoom-in" data-aos-delay="400">
         <div class="feature-card">
           <div class="feature-icon" style="background:#fce4ec;color:#c62828;"><ion-icon name="document-text"></ion-icon></div>
           <div class="feature-title">数据记录追溯</div>
@@ -353,10 +357,10 @@
 <!-- 生长阶段 -->
 <section id="growth" class="py-5">
   <div class="container">
-    <h2 class="section-title">生长阶段识别</h2>
-    <p class="section-sub">YOLO 三分类，LED 指示灯对应显示</p>
+    <h2 class="section-title" data-aos="fade-down">生长阶段识别</h2>
+    <p class="section-sub" data-aos="fade-up" data-aos-delay="100">YOLO 三分类，LED 指示灯对应显示</p>
     <div class="row g-4">
-      <div class="col-md-4">
+      <div class="col-md-4" data-aos="flip-left" data-aos-delay="100">
         <div class="growth-stage stage-germ">
           <div class="stage-icon">🌱</div>
           <div class="stage-name">萌芽期</div>
@@ -364,7 +368,7 @@
           <div class="small text-muted mt-2">种子破壳，幼芽初现，需保持高温高湿环境</div>
         </div>
       </div>
-      <div class="col-md-4">
+      <div class="col-md-4" data-aos="flip-left" data-aos-delay="250">
         <div class="growth-stage stage-cotyledon">
           <div class="stage-icon">🌿</div>
           <div class="stage-name">子叶期</div>
@@ -372,7 +376,7 @@
           <div class="small text-muted mt-2">子叶展开，开始光合作用，适度通风降温</div>
         </div>
       </div>
-      <div class="col-md-4">
+      <div class="col-md-4" data-aos="flip-left" data-aos-delay="400">
         <div class="growth-stage stage-seedling">
           <div class="stage-icon">🌳</div>
           <div class="stage-name">幼苗期</div>
@@ -387,9 +391,9 @@
 <!-- 技术参数 -->
 <section id="specs" class="py-5 bg-light">
   <div class="container">
-    <h2 class="section-title">技术参数</h2>
-    <p class="section-sub">系统硬件与通信规格一览</p>
-    <div class="table-responsive">
+    <h2 class="section-title" data-aos="fade-down">技术参数</h2>
+    <p class="section-sub" data-aos="fade-up" data-aos-delay="100">系统硬件与通信规格一览</p>
+    <div class="table-responsive" data-aos="fade-up" data-aos-delay="200">
       <table class="table spec-table table-hover align-middle">
         <thead>
           <tr>
@@ -515,5 +519,28 @@
 </footer>
 
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+<script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/tsparticles@2.12.0/tsparticles.bundle.min.js"></script>
+<script>
+  AOS.init({ duration: 700, easing: 'ease-out-cubic', once: true, offset: 80 });
+  tsParticles.load("tsparticles", {
+    fpsLimit: 60,
+    particles: {
+      number: { value: 45, density: { enable: true, area: 900 } },
+      color: { value: ["#ffffff", "#a5d6a7", "#81c784"] },
+      shape: { type: "circle" },
+      opacity: { value: 0.5, random: true, anim: { enable: true, speed: 0.5, opacity_min: 0.1 } },
+      size: { value: 3, random: true, anim: { enable: true, speed: 2, size_min: 0.5 } },
+      line_linked: { enable: true, distance: 140, color: "#ffffff", opacity: 0.15, width: 1 },
+      move: { enable: true, speed: 1.2, direction: "none", random: true, straight: false, out_mode: "out", bounce: false }
+    },
+    interactivity: {
+      detect_on: "canvas",
+      events: { onhover: { enable: true, mode: "grab" }, onclick: { enable: true, mode: "push" }, resize: true },
+      modes: { grab: { distance: 160, line_linked: { opacity: 0.4 } }, push: { particles_nb: 3 } }
+    },
+    retina_detect: true
+  });
+</script>
 </body>
 </html>
