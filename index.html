@@ -158,6 +158,42 @@
     .tag-act { background: #fce4ec; color: #c62828; }
     .tag-comm { background: #fff3e0; color: #e65100; }
 
+    /* ===== 硬件一览按钮 ===== */
+    .btn-hw-view {
+      background: linear-gradient(135deg, #1a7a4c 0%, #2d9a63 100%);
+      color: #fff; border: none; padding: 12px 32px;
+      font-size: 1rem; font-weight: 600; border-radius: 30px;
+      box-shadow: 0 4px 15px rgba(26,122,76,0.3);
+      transition: all 0.3s ease; cursor: pointer;
+    }
+    .btn-hw-view:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 6px 20px rgba(26,122,76,0.45);
+      color: #fff;
+    }
+    .btn-hw-view:not(.collapsed) #hwChevron { transform: rotate(180deg); }
+
+    /* ===== 硬件接线图容器 ===== */
+    .hw-diagram-wrapper {
+      border: 2px solid #e2e8f0; border-radius: 12px; overflow: hidden;
+      box-shadow: 0 8px 30px rgba(0,0,0,0.1); background: #0f172a;
+    }
+    .hw-diagram-header {
+      background: linear-gradient(135deg, #1a2332 0%, #2d3a4c 100%);
+      color: #e2e8f0; padding: 12px 20px;
+      display: flex; justify-content: space-between; align-items: center;
+      font-size: 0.95rem; font-weight: 600;
+    }
+    .hw-open-new {
+      color: #93c5fd; text-decoration: none; font-size: 0.85rem; font-weight: 400;
+      transition: color 0.2s;
+    }
+    .hw-open-new:hover { color: #60a5fa; text-decoration: underline; }
+    .hw-iframe {
+      width: 100%; height: 800px; border: none; display: block;
+      background: #0f172a;
+    }
+
     footer { background: #1a2332; color: #8b98a8; padding: 36px 0; font-size: 0.9rem; }
     .navbar { backdrop-filter: blur(12px); background: rgba(255,255,255,0.92) !important; box-shadow: 0 2px 16px rgba(0,0,0,0.06); }
     .navbar-brand { font-weight: 700; color: var(--brand-green) !important; font-size: 1.2rem; }
@@ -387,6 +423,26 @@
           <tr><td><span class="tag tag-ctrl">上位机</span></td><td>识别与显示</td><td>MATLAB + YOLO</td><td>GUI 数据显示、YOLO 生长识别、参数记录、指令下发</td><td>—</td></tr>
         </tbody>
       </table>
+    </div>
+    <!-- 硬件一览按钮 -->
+    <div class="text-center mt-4" data-aos="fade-up" data-aos-delay="300">
+      <button id="hwToggleBtn" class="btn btn-hw-view" type="button" data-bs-toggle="collapse" data-bs-target="#hwDiagram" aria-expanded="false" aria-controls="hwDiagram">
+        <ion-icon name="hardware-chip" style="vertical-align:-2px;margin-right:6px;"></ion-icon>
+        硬件一览 · 查看接线图
+        <ion-icon name="chevron-down" id="hwChevron" style="vertical-align:-2px;margin-left:6px;transition:transform 0.3s;"></ion-icon>
+      </button>
+    </div>
+    <!-- 硬件接线图折叠区域 -->
+    <div class="collapse mt-4" id="hwDiagram">
+      <div class="hw-diagram-wrapper">
+        <div class="hw-diagram-header">
+          <span><ion-icon name="git-network" style="vertical-align:-2px;margin-right:6px;"></ion-icon>硬件接线图 · STM32F103ZET6 · 58路IO</span>
+          <a href="果树育苗系统_物理接线图_V2.6.html" target="_blank" class="hw-open-new">
+            <ion-icon name="open-outline" style="vertical-align:-2px;margin-right:4px;"></ion-icon>新窗口打开
+          </a>
+        </div>
+        <iframe src="果树育苗系统_物理接线图_V2.6.html" class="hw-iframe" title="硬件接线图"></iframe>
+      </div>
     </div>
   </div>
 </section>
