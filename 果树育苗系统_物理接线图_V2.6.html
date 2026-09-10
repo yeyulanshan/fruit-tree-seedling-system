@@ -24,6 +24,9 @@
   --legend-bg: rgba(22, 33, 62, 0.8);
   --legend-border: rgba(59, 130, 246, 0.15);
   --pin-stroke: #0f0f1a;
+  --accent: #2e9e6b;
+  --accent-light: #4ade80;
+  --glow: rgba(46, 158, 107, 0.4);
 }
 
 /* 浅色主题 */
@@ -46,6 +49,9 @@ body.theme-light {
   --legend-bg: rgba(255, 255, 255, 0.9);
   --legend-border: rgba(59, 130, 246, 0.2);
   --pin-stroke: #ffffff;
+  --accent: #1a7a4c;
+  --accent-light: #15803d;
+  --glow: rgba(26, 122, 76, 0.2);
 }
 
 /* 护眼绿主题 */
@@ -68,6 +74,9 @@ body.theme-green {
   --legend-bg: rgba(255, 255, 255, 0.9);
   --legend-border: rgba(34, 197, 94, 0.2);
   --pin-stroke: #ffffff;
+  --accent: #15803d;
+  --accent-light: #22c55e;
+  --glow: rgba(34, 197, 94, 0.3);
 }
 
 /* 深蓝主题 */
@@ -90,56 +99,167 @@ body.theme-blue {
   --legend-bg: rgba(19, 39, 67, 0.9);
   --legend-border: rgba(37, 99, 235, 0.2);
   --pin-stroke: #0c1929;
+  --accent: #3b82f6;
+  --accent-light: #60a5fa;
+  --glow: rgba(59, 130, 246, 0.4);
 }
 
 * { margin: 0; padding: 0; box-sizing: border-box; }
 body {
-  background: var(--page-bg);
-  font-family: "Microsoft YaHei", sans-serif;
+  background: linear-gradient(135deg, var(--bg-grad-1) 0%, var(--bg-grad-2) 50%, var(--bg-grad-3) 100%);
+  font-family: "Microsoft YaHei", "PingFang SC", sans-serif;
   min-height: 100vh;
-  padding: 20px;
-  transition: background 0.3s ease;
+  padding: 24px;
+  transition: background 0.4s ease;
+  position: relative;
+  overflow-x: hidden;
+}
+/* 背景装饰光晕 */
+body::before {
+  content: '';
+  position: fixed;
+  top: -20%; left: -10%;
+  width: 500px; height: 500px;
+  background: radial-gradient(circle, var(--glow) 0%, transparent 70%);
+  border-radius: 50%;
+  pointer-events: none;
+  z-index: 0;
+}
+body::after {
+  content: '';
+  position: fixed;
+  bottom: -20%; right: -10%;
+  width: 600px; height: 600px;
+  background: radial-gradient(circle, var(--glow) 0%, transparent 70%);
+  border-radius: 50%;
+  pointer-events: none;
+  z-index: 0;
 }
 
-/* 主题切换按钮 */
+/* 顶部标题栏 - 玻璃拟态 */
+.header-bar {
+  position: relative;
+  z-index: 1;
+  max-width: 1400px;
+  margin: 0 auto 20px;
+  padding: 24px 32px;
+  background: var(--container-bg);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border-radius: 16px;
+  border: 1px solid var(--container-border);
+  box-shadow: 0 8px 32px rgba(0,0,0,0.15);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 16px;
+}
+.header-left { display: flex; align-items: center; gap: 16px; }
+.header-icon {
+  width: 56px; height: 56px;
+  background: linear-gradient(135deg, var(--accent), var(--accent-light));
+  border-radius: 14px;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 28px;
+  box-shadow: 0 4px 20px var(--glow);
+  animation: pulse-glow 3s ease-in-out infinite;
+}
+@keyframes pulse-glow {
+  0%, 100% { box-shadow: 0 4px 20px var(--glow); }
+  50% { box-shadow: 0 4px 30px var(--glow), 0 0 40px var(--glow); }
+}
+.header-text h1 {
+  color: var(--title-color);
+  font-size: 22px;
+  font-weight: 700;
+  margin-bottom: 4px;
+  letter-spacing: 1px;
+}
+.header-text .sub {
+  color: var(--text-muted);
+  font-size: 12px;
+  font-family: Consolas, monospace;
+}
+.header-stats { display: flex; gap: 24px; }
+.stat-item { text-align: center; }
+.stat-num {
+  font-size: 24px;
+  font-weight: 700;
+  color: var(--accent-light);
+  line-height: 1;
+}
+.stat-label {
+  font-size: 11px;
+  color: var(--text-muted);
+  margin-top: 4px;
+}
+
+/* 主题切换按钮 - 玻璃拟态 */
 .theme-switcher {
+  position: relative;
+  z-index: 1;
   display: flex;
   justify-content: center;
   gap: 10px;
-  margin-bottom: 15px;
+  margin-bottom: 16px;
 }
 .theme-btn {
   padding: 8px 18px;
-  border: 2px solid var(--border-color);
+  border: 1px solid var(--container-border);
   border-radius: 20px;
-  background: var(--module-fill);
+  background: var(--container-bg);
+  backdrop-filter: blur(8px);
   color: var(--text-primary);
   cursor: pointer;
   font-size: 13px;
   font-family: "Microsoft YaHei", sans-serif;
-  transition: all 0.2s ease;
+  transition: all 0.25s ease;
   display: flex;
   align-items: center;
   gap: 6px;
 }
-.theme-btn:hover { transform: translateY(-2px); box-shadow: 0 4px 12px rgba(0,0,0,0.2); }
-.theme-btn.active { border-color: #3b82f6; background: rgba(59,130,246,0.15); }
+.theme-btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 16px var(--glow);
+  border-color: var(--accent);
+}
+.theme-btn.active {
+  border-color: var(--accent);
+  background: linear-gradient(135deg, var(--accent), var(--accent-light));
+  color: #fff;
+  box-shadow: 0 4px 16px var(--glow);
+}
 .theme-dot { width: 14px; height: 14px; border-radius: 50%; border: 1px solid rgba(0,0,0,0.2); }
 
-.header { text-align: center; margin-bottom: 15px; }
-.header h1 { color: var(--title-color); font-size: 24px; margin-bottom: 5px; }
-.header .sub { color: var(--text-muted); font-size: 13px; font-family: Consolas, monospace; }
-.tip-wrap { text-align: center; margin-bottom: 15px; }
+.tip-wrap { text-align: center; margin-bottom: 16px; position: relative; z-index: 1; }
 .tip {
-  color: #fbbf24; font-size: 13px;
-  background: rgba(251, 191, 36, 0.1);
-  padding: 8px 20px; border-radius: 20px; display: inline-block;
-}
-.container {
-  display: flex; justify-content: center; overflow: auto;
+  color: var(--accent-light);
+  font-size: 13px;
   background: var(--container-bg);
-  border-radius: 12px; padding: 10px;
+  backdrop-filter: blur(8px);
+  padding: 8px 24px;
+  border-radius: 20px;
+  display: inline-block;
   border: 1px solid var(--container-border);
+}
+
+/* 主容器 - 玻璃拟态 */
+.container {
+  position: relative;
+  z-index: 1;
+  display: flex;
+  justify-content: center;
+  overflow: auto;
+  background: var(--container-bg);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border-radius: 16px;
+  padding: 16px;
+  border: 1px solid var(--container-border);
+  box-shadow: 0 12px 40px rgba(0,0,0,0.2);
+  max-width: 1400px;
+  margin: 0 auto;
 }
 svg { max-width: 100%; height: auto; }
 
@@ -150,7 +270,12 @@ svg { max-width: 100%; height: auto; }
 .svg-subtitle { fill: var(--text-muted); font-size: 11px; text-anchor: middle; font-family: Consolas; }
 .svg-footer { fill: var(--text-muted); font-size: 10px; text-anchor: middle; font-family: Consolas; }
 .module-box, .module-box-static { fill: var(--module-fill); }
-.mcu-box { fill: var(--mcu-fill); stroke: #3b82f6; stroke-width: 2; }
+.mcu-box {
+  fill: var(--mcu-fill);
+  stroke: var(--accent);
+  stroke-width: 2;
+  filter: drop-shadow(0 0 8px var(--glow));
+}
 .mcu-title { fill: var(--title-color); font-size: 14px; font-weight: bold; text-anchor: middle; font-family: Consolas; }
 .mcu-sub { fill: var(--text-muted); font-size: 9px; text-anchor: middle; font-family: Consolas; }
 .mod-title { fill: var(--text-primary); font-size: 10px; font-weight: bold; text-anchor: middle; }
@@ -163,19 +288,42 @@ svg { max-width: 100%; height: auto; }
 .pin-sig { fill: var(--text-secondary); font-size: 7.5px; font-family: Consolas; }
 .pin-sig-right { fill: var(--text-secondary); font-size: 7.5px; text-anchor: end; font-family: Consolas; }
 
+/* 图例 - 玻璃拟态 */
 .legend {
-  display: flex; flex-wrap: wrap; justify-content: center; gap: 12px;
-  margin: 15px auto; padding: 12px 20px;
+  position: relative;
+  z-index: 1;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 10px;
+  margin: 16px auto;
+  padding: 14px 24px;
   background: var(--legend-bg);
-  border-radius: 10px; max-width: 900px;
+  backdrop-filter: blur(12px);
+  border-radius: 12px;
+  max-width: 1000px;
   border: 1px solid var(--legend-border);
+  box-shadow: 0 4px 20px rgba(0,0,0,0.1);
 }
-.legend-item { display: flex; align-items: center; gap: 5px; color: var(--text-primary); font-size: 12px; }
+.legend-item {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  color: var(--text-primary);
+  font-size: 12px;
+  padding: 4px 10px;
+  border-radius: 8px;
+  transition: background 0.2s;
+}
+.legend-item:hover { background: rgba(255,255,255,0.05); }
 .legend-color { width: 24px; height: 4px; border-radius: 2px; }
 
 .module { cursor: pointer; }
-.module-box { transition: all 0.2s ease; }
-.module:hover .module-box { stroke-width: 3; filter: brightness(1.15); }
+.module-box { transition: all 0.25s ease; }
+.module:hover .module-box {
+  stroke-width: 3;
+  filter: brightness(1.15) drop-shadow(0 0 6px var(--glow));
+}
 .wire { transition: opacity 0.2s ease, stroke-width 0.2s ease; }
 .wire:hover { stroke-width: 3 !important; opacity: 1 !important; cursor: pointer; }
 svg.highlight-mode .wire { opacity: 0.12; }
@@ -184,31 +332,87 @@ svg.highlight-mode .module.dim .module-box { opacity: 0.35; }
 svg.highlight-mode .module.active .module-box { stroke-width: 3; filter: brightness(1.15); }
 
 #tooltip {
-  position: fixed; background: rgba(15, 23, 42, 0.97);
-  color: #e2e8f0; padding: 10px 14px; border-radius: 8px;
-  font-size: 13px; font-family: Consolas, "Microsoft YaHei", monospace;
-  pointer-events: none; z-index: 1000;
-  border: 1px solid #3b82f6;
-  box-shadow: 0 4px 20px rgba(0,0,0,0.6);
-  display: none; max-width: 300px;
+  position: fixed;
+  background: rgba(15, 23, 42, 0.97);
+  color: #e2e8f0;
+  padding: 12px 16px;
+  border-radius: 10px;
+  font-size: 13px;
+  font-family: Consolas, "Microsoft YaHei", monospace;
+  pointer-events: none;
+  z-index: 1000;
+  border: 1px solid var(--accent);
+  box-shadow: 0 8px 32px rgba(0,0,0,0.5), 0 0 20px var(--glow);
+  display: none;
+  max-width: 320px;
+  backdrop-filter: blur(10px);
 }
-#tooltip .tt-title { color: #93c5fd; font-weight: bold; margin-bottom: 4px; }
-#tooltip .tt-line { color: #cbd5e1; margin: 2px 0; }
+#tooltip .tt-title { color: var(--accent-light); font-weight: bold; margin-bottom: 6px; font-size: 14px; }
+#tooltip .tt-line { color: #cbd5e1; margin: 3px 0; }
 #tooltip .tt-pin { color: #fbbf24; }
+
+/* 底部信息栏 */
+.footer-bar {
+  position: relative;
+  z-index: 1;
+  max-width: 1400px;
+  margin: 16px auto 0;
+  padding: 12px 24px;
+  text-align: center;
+  color: var(--text-muted);
+  font-size: 12px;
+  font-family: Consolas, monospace;
+}
+
+@media (max-width: 768px) {
+  .header-bar { flex-direction: column; text-align: center; }
+  .header-stats { gap: 16px; }
+  .stat-num { font-size: 18px; }
+}
 </style>
 </head>
 <body class="theme-dark">
+
+<!-- 玻璃拟态标题栏 -->
+<div class="header-bar">
+  <div class="header-left">
+    <div class="header-icon">🌱</div>
+    <div class="header-text">
+      <h1>果树种子育苗系统 · 硬件接线图</h1>
+      <div class="sub">STM32F103ZET6 · 正点原子精英V2 · 58路IO全分配</div>
+    </div>
+  </div>
+  <div class="header-stats">
+    <div class="stat-item">
+      <div class="stat-num">58</div>
+      <div class="stat-label">IO 通道</div>
+    </div>
+    <div class="stat-item">
+      <div class="stat-num">30+</div>
+      <div class="stat-label">功能模块</div>
+    </div>
+    <div class="stat-item">
+      <div class="stat-num">66</div>
+      <div class="stat-label">网络连接</div>
+    </div>
+    <div class="stat-item">
+      <div class="stat-num">V2.6</div>
+      <div class="stat-label">图纸版本</div>
+    </div>
+  </div>
+</div>
+
+<!-- 主题切换 -->
 <div class="theme-switcher">
   <button class="theme-btn active" data-theme="dark"><span class="theme-dot" style="background:#0f172a"></span>深色</button>
   <button class="theme-btn" data-theme="light"><span class="theme-dot" style="background:#f8fafc;border:1px solid #cbd5e1"></span>浅色</button>
   <button class="theme-btn" data-theme="green"><span class="theme-dot" style="background:#dcfce7"></span>护眼绿</button>
   <button class="theme-btn" data-theme="blue"><span class="theme-dot" style="background:#162d4a"></span>深蓝</button>
 </div>
-<div class="header">
-  <h1>果树种子育苗系统 · 硬件接线图</h1>
-  <div class="sub">STM32F103ZET6 · 正点原子精英V2 · 58路IO分配</div>
-</div>
-<div class="tip-wrap"><span class="tip">鼠标悬浮模块 → 高亮连线；悬浮连线 → 查看连接详情</span></div>
+
+<div class="tip-wrap"><span class="tip">💡 鼠标悬浮模块 → 高亮连线；悬浮连线 → 查看连接详情</span></div>
+
+<!-- 图例 -->
 <div class="legend">
 <div class="legend-item"><div class="legend-color" style="background:#ef4444"></div>+12V</div>
 <div class="legend-item"><div class="legend-color" style="background:#fb923c"></div>+5V</div>
@@ -223,6 +427,7 @@ svg.highlight-mode .module.active .module-box { stroke-width: 3; filter: brightn
 <div class="legend-item"><div class="legend-color" style="background:#fca5a5"></div>RS485</div>
 <div class="legend-item"><div class="legend-color" style="background:#94a3b8"></div>JTAG</div>
 </div>
+
 <div class="container">
 <svg id="wiring-svg" width="1900" height="1750" viewBox="0 0 1900 1750" xmlns="http://www.w3.org/2000/svg">
 <defs>
@@ -837,6 +1042,8 @@ svg.highlight-mode .module.active .module-box { stroke-width: 3; filter: brightn
 <text class="svg-footer" x="950.0" y="1725">V2.6 · 主题切换 · 居中布局 · 交互高亮 · 智能绕行</text>
 </svg>
 </div>
+
+<div class="footer-bar">果树种子育苗系统 · 硬件接线图 V2.6 · 基于 STM32F103ZET6 正点原子精英V2开发板</div>
 
 <div id="tooltip"></div>
 
