@@ -206,10 +206,147 @@
       .flow-connector { display: none; }
       * { cursor: auto; }
       .cursor-glow, .cursor-dot { display: none; }
+      .side-nav { display: none !important; }
     }
+
+    /* ===== 滚动进度条 ===== */
+    .scroll-progress {
+      position: fixed; top: 0; left: 0; height: 3px; width: 0%;
+      background: linear-gradient(90deg, #1a7a4c, #2e9e6b, #81c784);
+      z-index: 10002; transition: width 0.1s ease-out;
+      box-shadow: 0 0 10px rgba(46,158,107,0.6);
+    }
+
+    /* ===== 左侧固定导航栏 ===== */
+    .side-nav {
+      position: fixed; left: 0; top: 50%; transform: translateY(-50%);
+      z-index: 1000; display: flex; flex-direction: column; gap: 4px;
+      padding: 12px 8px; background: rgba(255,255,255,0.7);
+      backdrop-filter: blur(12px); border-radius: 0 16px 16px 0;
+      box-shadow: 2px 0 20px rgba(0,0,0,0.08);
+    }
+    .side-nav a {
+      display: flex; align-items: center; gap: 8px;
+      padding: 8px 14px 8px 10px; border-radius: 10px;
+      color: #6b7a8d; text-decoration: none; font-size: 0.85rem;
+      transition: all 0.25s ease; white-space: nowrap;
+      overflow: hidden; max-width: 42px;
+    }
+    .side-nav:hover a { max-width: 200px; }
+    .side-nav a:hover, .side-nav a.active {
+      background: linear-gradient(135deg, #1a7a4c, #2e9e6b);
+      color: #fff; box-shadow: 0 4px 12px rgba(26,122,76,0.3);
+    }
+    .side-nav a ion-icon { font-size: 1.1rem; flex-shrink: 0; }
+    .side-nav .nav-label { opacity: 0; transition: opacity 0.2s; }
+    .side-nav:hover .nav-label { opacity: 1; }
+    .side-nav-divider { height: 1px; background: #e2e8f0; margin: 4px 8px; }
+    .side-nav-social { display: flex; flex-direction: column; gap: 2px; }
+    .side-nav-social a { padding: 6px 10px; }
+
+    /* ===== 打字机效果 ===== */
+    .typewriter {
+      display: inline; border-right: 2px solid #2e9e6b;
+      animation: blink 0.8s step-end infinite;
+    }
+    @keyframes blink { 50% { border-color: transparent; } }
+
+    /* ===== 玻璃拟态卡片 ===== */
+    .glass-card {
+      background: rgba(255,255,255,0.65) !important;
+      backdrop-filter: blur(16px); -webkit-backdrop-filter: blur(16px);
+      border: 1px solid rgba(255,255,255,0.8) !important;
+      box-shadow: 0 8px 32px rgba(0,0,0,0.08) !important;
+    }
+
+    /* ===== 磁性按钮 ===== */
+    .magnetic-btn {
+      position: relative; transition: transform 0.2s ease-out, box-shadow 0.3s;
+      will-change: transform;
+    }
+
+    /* ===== 跑马灯技术栈 ===== */
+    .marquee-container {
+      overflow: hidden; padding: 16px 0; background: linear-gradient(90deg, #f8fafc, #fff, #f8fafc);
+      border-top: 1px solid #e2e8f0; border-bottom: 1px solid #e2e8f0;
+    }
+    .marquee-track {
+      display: flex; gap: 40px; animation: marquee 30s linear infinite;
+      width: max-content;
+    }
+    .marquee-track:hover { animation-play-state: paused; }
+    @keyframes marquee { to { transform: translateX(-50%); } }
+    .marquee-item {
+      display: flex; align-items: center; gap: 8px;
+      padding: 6px 18px; background: #fff; border-radius: 20px;
+      border: 1px solid #e2e8f0; font-size: 0.9rem; color: #4a5568;
+      white-space: nowrap; box-shadow: 0 2px 8px rgba(0,0,0,0.04);
+    }
+    .marquee-item ion-icon { color: #1a7a4c; font-size: 1.1rem; }
+
+    /* ===== 系统终端面板 ===== */
+    .terminal-section { background: #0d1117; padding: 60px 0; position: relative; overflow: hidden; }
+    .terminal-section::before {
+      content: ''; position: absolute; inset: 0;
+      background: radial-gradient(circle at 20% 50%, rgba(46,158,107,0.08) 0%, transparent 50%);
+    }
+    .terminal-window {
+      background: #161b22; border-radius: 12px; overflow: hidden;
+      box-shadow: 0 20px 60px rgba(0,0,0,0.4); border: 1px solid #30363d;
+      font-family: 'Consolas', 'Monaco', monospace;
+    }
+    .terminal-header {
+      background: #21262d; padding: 10px 16px; display: flex;
+      align-items: center; gap: 8px; border-bottom: 1px solid #30363d;
+    }
+    .terminal-dot { width: 12px; height: 12px; border-radius: 50%; }
+    .terminal-title { color: #8b949e; font-size: 0.85rem; margin-left: 12px; }
+    .terminal-body { padding: 20px; min-height: 320px; font-size: 0.88rem; line-height: 1.8; }
+    .term-line { color: #c9d1d9; }
+    .term-prompt { color: #2e9e6b; font-weight: bold; }
+    .term-cmd { color: #79c0ff; }
+    .term-output { color: #8b949e; padding-left: 20px; }
+    .term-success { color: #2e9e6b; }
+    .term-warn { color: #f0883e; }
+    .term-value { color: #d2a8ff; }
+    .term-cursor {
+      display: inline-block; width: 8px; height: 16px; background: #2e9e6b;
+      animation: blink 0.8s step-end infinite; vertical-align: middle;
+    }
+
+    /* ===== 数据统计卡片 ===== */
+    .stat-card {
+      text-align: center; padding: 24px 16px; border-radius: 16px;
+      background: linear-gradient(135deg, rgba(255,255,255,0.9), rgba(255,255,255,0.7));
+      border: 1px solid rgba(255,255,255,0.8);
+      box-shadow: 0 4px 20px rgba(0,0,0,0.06);
+      transition: transform 0.3s, box-shadow 0.3s;
+    }
+    .stat-card:hover { transform: translateY(-4px); box-shadow: 0 8px 30px rgba(0,0,0,0.1); }
+    .stat-number { font-size: 2.5rem; font-weight: 700; color: #1a7a4c; line-height: 1; }
+    .stat-label { color: #6b7a8d; font-size: 0.9rem; margin-top: 8px; }
+    .stat-icon { font-size: 1.8rem; margin-bottom: 8px; color: #2e9e6b; }
   </style>
 </head>
 <body>
+
+<!-- 滚动进度条 -->
+<div class="scroll-progress" id="scrollProgress"></div>
+
+<!-- 左侧固定导航栏 -->
+<nav class="side-nav">
+  <a href="#top" class="active" data-section="top"><ion-icon name="home"></ion-icon><span class="nav-label">首页</span></a>
+  <a href="#architecture" data-section="architecture"><ion-icon name="git-network"></ion-icon><span class="nav-label">系统架构</span></a>
+  <a href="#workflow" data-section="workflow"><ion-icon name="git-branch"></ion-icon><span class="nav-label">工作流程</span></a>
+  <a href="#features" data-section="features"><ion-icon name="star"></ion-icon><span class="nav-label">核心特性</span></a>
+  <a href="#specs" data-section="specs"><ion-icon name="document-text"></ion-icon><span class="nav-label">技术参数</span></a>
+  <a href="#terminal" data-section="terminal"><ion-icon name="terminal"></ion-icon><span class="nav-label">系统状态</span></a>
+  <a href="#growth" data-section="growth"><ion-icon name="leaf"></ion-icon><span class="nav-label">生长阶段</span></a>
+  <div class="side-nav-divider"></div>
+  <div class="side-nav-social">
+    <a href="https://github.com/yeyulanshan/fruit-tree-seedling-system" target="_blank"><ion-icon name="logo-github"></ion-icon><span class="nav-label">GitHub</span></a>
+  </div>
+</nav>
 
 <!-- 鼠标跟随 -->
 <div class="cursor-glow" id="cursorGlow"></div>
@@ -256,7 +393,9 @@
           <ion-icon name="hardware-chip"></ion-icon> STM32 下位机 · MATLAB 上位机 · YOLO 视觉识别
         </span>
         <h1 data-aos="fade-up" data-aos-delay="100">果树种子育苗系统</h1>
-        <p class="lead mt-4" data-aos="fade-up" data-aos-delay="200">基于 STM32F103ZET6 与 MATLAB/YOLO 的全流程自动化育苗平台，覆盖萌芽期、子叶期、幼苗期三阶段闭环调控，实现精准滴灌、环境监测与生长识别一体化。</p>
+        <p class="lead mt-4" data-aos="fade-up" data-aos-delay="200">
+          <span id="typewriter" class="typewriter"></span>
+        </p>
         <div class="d-flex flex-wrap gap-3 mt-5" data-aos="fade-up" data-aos-delay="300">
           <span class="badge-soft bg-white bg-opacity-15 text-white"><ion-icon name="thermometer"></ion-icon> 温湿度闭环</span>
           <span class="badge-soft bg-white bg-opacity-15 text-white"><ion-icon name="eye"></ion-icon> YOLO 生长识别</span>
@@ -271,7 +410,32 @@
   </div>
 </section>
 
-<!-- 系统架构 -->
+<!-- 技术栈跑马灯 -->
+<div class="marquee-container">
+  <div class="marquee-track">
+    <div class="marquee-item"><ion-icon name="hardware-chip"></ion-icon> STM32F103ZET6</div>
+    <div class="marquee-item"><ion-icon name="code-slash"></ion-icon> Keil5 标准库</div>
+    <div class="marquee-item"><ion-icon name="eye"></ion-icon> YOLO 视觉识别</div>
+    <div class="marquee-item"><ion-icon name="bar-chart"></ion-icon> MATLAB GUI</div>
+    <div class="marquee-item"><ion-icon name="wifi"></ion-icon> ESP8266 WLAN</div>
+    <div class="marquee-item"><ion-icon name="thermometer"></ion-icon> DHT11 温湿度</div>
+    <div class="marquee-item"><ion-icon name="water"></ion-icon> 精准滴灌</div>
+    <div class="marquee-item"><ion-icon name="move"></ion-icon> TB6600 步进驱动</div>
+    <div class="marquee-item"><ion-icon name="flash"></ion-icon> WS2812B 灯带</div>
+    <div class="marquee-item"><ion-icon name="construct"></ion-icon> KiCad 原理图</div>
+    <!-- 复制一份实现无缝滚动 -->
+    <div class="marquee-item"><ion-icon name="hardware-chip"></ion-icon> STM32F103ZET6</div>
+    <div class="marquee-item"><ion-icon name="code-slash"></ion-icon> Keil5 标准库</div>
+    <div class="marquee-item"><ion-icon name="eye"></ion-icon> YOLO 视觉识别</div>
+    <div class="marquee-item"><ion-icon name="bar-chart"></ion-icon> MATLAB GUI</div>
+    <div class="marquee-item"><ion-icon name="wifi"></ion-icon> ESP8266 WLAN</div>
+    <div class="marquee-item"><ion-icon name="thermometer"></ion-icon> DHT11 温湿度</div>
+    <div class="marquee-item"><ion-icon name="water"></ion-icon> 精准滴灌</div>
+    <div class="marquee-item"><ion-icon name="move"></ion-icon> TB6600 步进驱动</div>
+    <div class="marquee-item"><ion-icon name="flash"></ion-icon> WS2812B 灯带</div>
+    <div class="marquee-item"><ion-icon name="construct"></ion-icon> KiCad 原理图</div>
+  </div>
+</div>
 <section id="architecture" class="py-5 bg-light">
   <div class="container">
     <h2 class="section-title" data-aos="fade-down">系统架构</h2>
@@ -376,6 +540,83 @@
       <div class="col-md-3 col-6" data-aos="fade-up" data-aos-delay="100"><div class="stat-number" data-target="7">0</div><div class="stat-label">执行机构控制</div></div>
       <div class="col-md-3 col-6" data-aos="fade-up" data-aos-delay="200"><div class="stat-number" data-target="115200">0</div><div class="stat-label">WLAN 传输速率 bps</div></div>
       <div class="col-md-3 col-6" data-aos="fade-up" data-aos-delay="300"><div class="stat-number" data-target="24">0</div><div class="stat-label">小时全天候运行</div></div>
+    </div>
+  </div>
+</section>
+
+<!-- 系统状态终端 -->
+<section id="terminal" class="terminal-section">
+  <div class="container position-relative" style="z-index:1;">
+    <h2 class="section-title text-white mb-4" data-aos="fade-down" style="border-left-color:#2e9e6b;">
+      <ion-icon name="terminal" style="vertical-align:-3px;margin-right:8px;"></ion-icon>系统运行状态
+    </h2>
+    <p class="section-sub" style="color:#8b949e;" data-aos="fade-up" data-aos-delay="100">实时模拟育苗系统下位机运行日志与传感器数据</p>
+    <div class="row g-4">
+      <div class="col-lg-7" data-aos="fade-right" data-aos-delay="200">
+        <div class="terminal-window">
+          <div class="terminal-header">
+            <span class="terminal-dot" style="background:#ff5f56;"></span>
+            <span class="terminal-dot" style="background:#ffbd2e;"></span>
+            <span class="terminal-dot" style="background:#27c93f;"></span>
+            <span class="terminal-title">seedling-system@stm32 — minicom</span>
+          </div>
+          <div class="terminal-body" id="terminalBody">
+            <div class="term-line"><span class="term-prompt">$</span> <span class="term-cmd">systemctl status seedling.service</span></div>
+            <div class="term-output">● seedling.service - 果树种子育苗控制系统</div>
+            <div class="term-output">   Active: <span class="term-success">active (running)</span> since boot</div>
+            <div class="term-output">   Main PID: 1 (STM32F103ZET6)</div>
+            <div class="term-output">   Tasks: 58 IO channels allocated</div>
+            <div class="term-line mt-2"><span class="term-prompt">$</span> <span class="term-cmd">sensor read --all</span></div>
+            <div class="term-output">  温度(空气): <span class="term-value">26.4°C</span>  |  湿度(空气): <span class="term-value">68%</span></div>
+            <div class="term-output">  温度(土壤): <span class="term-value">24.1°C</span>  |  湿度(土壤): <span class="term-value">52%</span></div>
+            <div class="term-output">  光照强度: <span class="term-value">842 lux</span>  |  水箱水位: <span class="term-value">78%</span></div>
+            <div class="term-output">  生长阶段: <span class="term-value">子叶期</span>  |  幼苗数量: <span class="term-value">24</span></div>
+            <div class="term-line mt-2"><span class="term-prompt">$</span> <span class="term-cmd">gpio status</span></div>
+            <div class="term-output">  PA1  WS2812B  <span class="term-success">RUNNING</span>  |  PB0  水泵1    <span class="term-warn">STANDBY</span></div>
+            <div class="term-output">  PG0  风扇1    <span class="term-success">RUNNING</span>  |  PG2  加热片1  <span class="term-warn">STANDBY</span></div>
+            <div class="term-output">  PE9  步进X    <span class="term-success">IDLE</span>     |  PE11 步进Y    <span class="term-success">IDLE</span></div>
+            <div class="term-line mt-2"><span class="term-prompt">$</span> <span class="term-cmd">_</span><span class="term-cursor"></span></div>
+          </div>
+        </div>
+      </div>
+      <div class="col-lg-5" data-aos="fade-left" data-aos-delay="300">
+        <div class="row g-3">
+          <div class="col-6">
+            <div class="stat-card" style="background:rgba(22,27,34,0.8);border-color:#30363d;">
+              <div class="stat-icon"><ion-icon name="thermometer"></ion-icon></div>
+              <div class="stat-number" style="color:#2e9e6b;" data-target="26">0</div>
+              <div class="stat-label" style="color:#8b949e;">环境温度 °C</div>
+            </div>
+          </div>
+          <div class="col-6">
+            <div class="stat-card" style="background:rgba(22,27,34,0.8);border-color:#30363d;">
+              <div class="stat-icon"><ion-icon name="water"></ion-icon></div>
+              <div class="stat-number" style="color:#79c0ff;" data-target="68">0</div>
+              <div class="stat-label" style="color:#8b949e;">空气湿度 %</div>
+            </div>
+          </div>
+          <div class="col-6">
+            <div class="stat-card" style="background:rgba(22,27,34,0.8);border-color:#30363d;">
+              <div class="stat-icon"><ion-icon name="leaf"></ion-icon></div>
+              <div class="stat-number" style="color:#d2a8ff;" data-target="24">0</div>
+              <div class="stat-label" style="color:#8b949e;">监测幼苗数</div>
+            </div>
+          </div>
+          <div class="col-6">
+            <div class="stat-card" style="background:rgba(22,27,34,0.8);border-color:#30363d;">
+              <div class="stat-icon"><ion-icon name="pulse"></ion-icon></div>
+              <div class="stat-number" style="color:#f0883e;" data-target="58">0</div>
+              <div class="stat-label" style="color:#8b949e;">IO 通道数</div>
+            </div>
+          </div>
+        </div>
+        <div class="mt-3 p-3 rounded" style="background:rgba(46,158,107,0.1);border:1px solid rgba(46,158,107,0.3);">
+          <div class="d-flex align-items-center gap-2" style="color:#2e9e6b;font-size:0.9rem;">
+            <ion-icon name="checkmark-circle"></ion-icon>
+            <span>系统运行正常 · WLAN 已连接 · 数据上行中</span>
+          </div>
+        </div>
+      </div>
     </div>
   </div>
 </section>
@@ -556,6 +797,58 @@
         card.style.transform = `perspective(800px) rotateX(${rotX}deg) rotateY(${rotY}deg) scale(1.03)`;
       });
       card.addEventListener('mouseleave', () => { card.style.transform = 'perspective(800px) rotateX(0) rotateY(0) scale(1)'; });
+    });
+
+    // ===== 滚动进度条 =====
+    const progressBar = document.getElementById('scrollProgress');
+    window.addEventListener('scroll', () => {
+      const scrollTop = window.scrollY;
+      const docHeight = document.documentElement.scrollHeight - window.innerHeight;
+      const progress = (scrollTop / docHeight) * 100;
+      progressBar.style.width = progress + '%';
+    });
+
+    // ===== 打字机效果 =====
+    const typeText = '基于 STM32F103ZET6 与 MATLAB/YOLO 的全流程自动化育苗平台，覆盖萌芽期、子叶期、幼苗期三阶段闭环调控，实现精准滴灌、环境监测与生长识别一体化。';
+    const typeEl = document.getElementById('typewriter');
+    let typeIdx = 0;
+    function typeWriter() {
+      if (typeIdx < typeText.length) {
+        typeEl.textContent += typeText.charAt(typeIdx);
+        typeIdx++;
+        setTimeout(typeWriter, 35);
+      }
+    }
+    setTimeout(typeWriter, 800);
+
+    // ===== 侧边栏滚动高亮 =====
+    const sections = document.querySelectorAll('section[id]');
+    const navLinks = document.querySelectorAll('.side-nav a[data-section]');
+    window.addEventListener('scroll', () => {
+      let current = '';
+      sections.forEach(section => {
+        const sectionTop = section.offsetTop - 200;
+        if (window.scrollY >= sectionTop) {
+          current = section.getAttribute('id');
+        }
+      });
+      navLinks.forEach(link => {
+        link.classList.remove('active');
+        if (link.getAttribute('data-section') === current) {
+          link.classList.add('active');
+        }
+      });
+    });
+
+    // ===== 磁性按钮效果 =====
+    document.querySelectorAll('.btn, .magnetic-btn').forEach(btn => {
+      btn.addEventListener('mousemove', e => {
+        const rect = btn.getBoundingClientRect();
+        const x = e.clientX - rect.left - rect.width / 2;
+        const y = e.clientY - rect.top - rect.height / 2;
+        btn.style.transform = `translate(${x * 0.15}px, ${y * 0.15}px)`;
+      });
+      btn.addEventListener('mouseleave', () => { btn.style.transform = 'translate(0, 0)'; });
     });
   }
 </script>
