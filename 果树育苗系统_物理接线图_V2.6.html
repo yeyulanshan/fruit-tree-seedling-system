@@ -104,6 +104,31 @@ body.theme-blue {
   --glow: rgba(59, 130, 246, 0.4);
 }
 
+/* 鎏金主题 */
+body.theme-gold {
+  --bg-grad-1: #1a1410;
+  --bg-grad-2: #2a1f15;
+  --bg-grad-3: #1a1410;
+  --page-bg: #1a1410;
+  --grid-color: #4a3820;
+  --grid-opacity: 0.3;
+  --border-color: #8b6914;
+  --module-fill: #2a1f15;
+  --mcu-fill: #3d2e1a;
+  --text-primary: #f5e6d3;
+  --text-secondary: #d4af37;
+  --text-muted: #a08050;
+  --title-color: #ffd700;
+  --container-bg: rgba(42, 31, 21, 0.7);
+  --container-border: rgba(212, 175, 55, 0.3);
+  --legend-bg: rgba(42, 31, 21, 0.9);
+  --legend-border: rgba(212, 175, 55, 0.2);
+  --pin-stroke: #1a1410;
+  --accent: #d4af37;
+  --accent-light: #ffd700;
+  --glow: rgba(212, 175, 55, 0.4);
+}
+
 * { margin: 0; padding: 0; box-sizing: border-box; }
 body {
   background: linear-gradient(135deg, var(--bg-grad-1) 0%, var(--bg-grad-2) 50%, var(--bg-grad-3) 100%);
@@ -408,6 +433,7 @@ svg.highlight-mode .module.active .module-box { stroke-width: 3; filter: brightn
   <button class="theme-btn" data-theme="light"><span class="theme-dot" style="background:#f8fafc;border:1px solid #cbd5e1"></span>浅色</button>
   <button class="theme-btn" data-theme="green"><span class="theme-dot" style="background:#dcfce7"></span>护眼绿</button>
   <button class="theme-btn" data-theme="blue"><span class="theme-dot" style="background:#162d4a"></span>深蓝</button>
+  <button class="theme-btn" data-theme="gold"><span class="theme-dot" style="background:linear-gradient(135deg,#d4af37,#ffd700)"></span>鎏金</button>
 </div>
 
 <div class="tip-wrap"><span class="tip">💡 鼠标悬浮模块 → 高亮连线；悬浮连线 → 查看连接详情</span></div>
@@ -429,7 +455,7 @@ svg.highlight-mode .module.active .module-box { stroke-width: 3; filter: brightn
 </div>
 
 <div class="container">
-<svg id="wiring-svg" width="1900" height="1750" viewBox="0 0 1900 1750" xmlns="http://www.w3.org/2000/svg">
+<svg id="wiring-svg" width="1500" height="1750" viewBox="0 0 1500 1750" xmlns="http://www.w3.org/2000/svg">
 <defs>
 <linearGradient id="bgGrad" x1="0%" y1="0%" x2="100%" y2="100%">
 <stop offset="0%" style="stop-color:var(--bg-grad-1);stop-opacity:1" />
@@ -441,7 +467,7 @@ svg.highlight-mode .module.active .module-box { stroke-width: 3; filter: brightn
 <feMerge><feMergeNode in="coloredBlur"/><feMergeNode in="SourceGraphic"/></feMerge>
 </filter>
 </defs>
-<rect class="svg-bg" width="1900" height="1750" fill="url(#bgGrad)"/>
+<rect class="svg-bg" width="1500" height="1750" fill="url(#bgGrad)"/>
 <line class="grid-line" x1="0" y1="0" x2="0" y2="1750"/>
 <line class="grid-line" x1="50" y1="0" x2="50" y2="1750"/>
 <line class="grid-line" x1="100" y1="0" x2="100" y2="1750"/>
@@ -472,52 +498,44 @@ svg.highlight-mode .module.active .module-box { stroke-width: 3; filter: brightn
 <line class="grid-line" x1="1350" y1="0" x2="1350" y2="1750"/>
 <line class="grid-line" x1="1400" y1="0" x2="1400" y2="1750"/>
 <line class="grid-line" x1="1450" y1="0" x2="1450" y2="1750"/>
-<line class="grid-line" x1="1500" y1="0" x2="1500" y2="1750"/>
-<line class="grid-line" x1="1550" y1="0" x2="1550" y2="1750"/>
-<line class="grid-line" x1="1600" y1="0" x2="1600" y2="1750"/>
-<line class="grid-line" x1="1650" y1="0" x2="1650" y2="1750"/>
-<line class="grid-line" x1="1700" y1="0" x2="1700" y2="1750"/>
-<line class="grid-line" x1="1750" y1="0" x2="1750" y2="1750"/>
-<line class="grid-line" x1="1800" y1="0" x2="1800" y2="1750"/>
-<line class="grid-line" x1="1850" y1="0" x2="1850" y2="1750"/>
-<line class="grid-line" x1="0" y1="0" x2="1900" y2="0"/>
-<line class="grid-line" x1="0" y1="50" x2="1900" y2="50"/>
-<line class="grid-line" x1="0" y1="100" x2="1900" y2="100"/>
-<line class="grid-line" x1="0" y1="150" x2="1900" y2="150"/>
-<line class="grid-line" x1="0" y1="200" x2="1900" y2="200"/>
-<line class="grid-line" x1="0" y1="250" x2="1900" y2="250"/>
-<line class="grid-line" x1="0" y1="300" x2="1900" y2="300"/>
-<line class="grid-line" x1="0" y1="350" x2="1900" y2="350"/>
-<line class="grid-line" x1="0" y1="400" x2="1900" y2="400"/>
-<line class="grid-line" x1="0" y1="450" x2="1900" y2="450"/>
-<line class="grid-line" x1="0" y1="500" x2="1900" y2="500"/>
-<line class="grid-line" x1="0" y1="550" x2="1900" y2="550"/>
-<line class="grid-line" x1="0" y1="600" x2="1900" y2="600"/>
-<line class="grid-line" x1="0" y1="650" x2="1900" y2="650"/>
-<line class="grid-line" x1="0" y1="700" x2="1900" y2="700"/>
-<line class="grid-line" x1="0" y1="750" x2="1900" y2="750"/>
-<line class="grid-line" x1="0" y1="800" x2="1900" y2="800"/>
-<line class="grid-line" x1="0" y1="850" x2="1900" y2="850"/>
-<line class="grid-line" x1="0" y1="900" x2="1900" y2="900"/>
-<line class="grid-line" x1="0" y1="950" x2="1900" y2="950"/>
-<line class="grid-line" x1="0" y1="1000" x2="1900" y2="1000"/>
-<line class="grid-line" x1="0" y1="1050" x2="1900" y2="1050"/>
-<line class="grid-line" x1="0" y1="1100" x2="1900" y2="1100"/>
-<line class="grid-line" x1="0" y1="1150" x2="1900" y2="1150"/>
-<line class="grid-line" x1="0" y1="1200" x2="1900" y2="1200"/>
-<line class="grid-line" x1="0" y1="1250" x2="1900" y2="1250"/>
-<line class="grid-line" x1="0" y1="1300" x2="1900" y2="1300"/>
-<line class="grid-line" x1="0" y1="1350" x2="1900" y2="1350"/>
-<line class="grid-line" x1="0" y1="1400" x2="1900" y2="1400"/>
-<line class="grid-line" x1="0" y1="1450" x2="1900" y2="1450"/>
-<line class="grid-line" x1="0" y1="1500" x2="1900" y2="1500"/>
-<line class="grid-line" x1="0" y1="1550" x2="1900" y2="1550"/>
-<line class="grid-line" x1="0" y1="1600" x2="1900" y2="1600"/>
-<line class="grid-line" x1="0" y1="1650" x2="1900" y2="1650"/>
-<line class="grid-line" x1="0" y1="1700" x2="1900" y2="1700"/>
-<rect class="svg-border" x="10" y="10" width="1880" height="1730" fill="none" rx="8"/>
-<text class="svg-title" x="950.0" y="45">果树种子育苗系统 · 硬件接线图</text>
-<text class="svg-subtitle" x="950.0" y="65">STM32F103ZET6 · 正点原子精英V2 · 58路IO分配</text>
+<line class="grid-line" x1="0" y1="0" x2="1500" y2="0"/>
+<line class="grid-line" x1="0" y1="50" x2="1500" y2="50"/>
+<line class="grid-line" x1="0" y1="100" x2="1500" y2="100"/>
+<line class="grid-line" x1="0" y1="150" x2="1500" y2="150"/>
+<line class="grid-line" x1="0" y1="200" x2="1500" y2="200"/>
+<line class="grid-line" x1="0" y1="250" x2="1500" y2="250"/>
+<line class="grid-line" x1="0" y1="300" x2="1500" y2="300"/>
+<line class="grid-line" x1="0" y1="350" x2="1500" y2="350"/>
+<line class="grid-line" x1="0" y1="400" x2="1500" y2="400"/>
+<line class="grid-line" x1="0" y1="450" x2="1500" y2="450"/>
+<line class="grid-line" x1="0" y1="500" x2="1500" y2="500"/>
+<line class="grid-line" x1="0" y1="550" x2="1500" y2="550"/>
+<line class="grid-line" x1="0" y1="600" x2="1500" y2="600"/>
+<line class="grid-line" x1="0" y1="650" x2="1500" y2="650"/>
+<line class="grid-line" x1="0" y1="700" x2="1500" y2="700"/>
+<line class="grid-line" x1="0" y1="750" x2="1500" y2="750"/>
+<line class="grid-line" x1="0" y1="800" x2="1500" y2="800"/>
+<line class="grid-line" x1="0" y1="850" x2="1500" y2="850"/>
+<line class="grid-line" x1="0" y1="900" x2="1500" y2="900"/>
+<line class="grid-line" x1="0" y1="950" x2="1500" y2="950"/>
+<line class="grid-line" x1="0" y1="1000" x2="1500" y2="1000"/>
+<line class="grid-line" x1="0" y1="1050" x2="1500" y2="1050"/>
+<line class="grid-line" x1="0" y1="1100" x2="1500" y2="1100"/>
+<line class="grid-line" x1="0" y1="1150" x2="1500" y2="1150"/>
+<line class="grid-line" x1="0" y1="1200" x2="1500" y2="1200"/>
+<line class="grid-line" x1="0" y1="1250" x2="1500" y2="1250"/>
+<line class="grid-line" x1="0" y1="1300" x2="1500" y2="1300"/>
+<line class="grid-line" x1="0" y1="1350" x2="1500" y2="1350"/>
+<line class="grid-line" x1="0" y1="1400" x2="1500" y2="1400"/>
+<line class="grid-line" x1="0" y1="1450" x2="1500" y2="1450"/>
+<line class="grid-line" x1="0" y1="1500" x2="1500" y2="1500"/>
+<line class="grid-line" x1="0" y1="1550" x2="1500" y2="1550"/>
+<line class="grid-line" x1="0" y1="1600" x2="1500" y2="1600"/>
+<line class="grid-line" x1="0" y1="1650" x2="1500" y2="1650"/>
+<line class="grid-line" x1="0" y1="1700" x2="1500" y2="1700"/>
+<rect class="svg-border" x="10" y="10" width="1480" height="1730" fill="none" rx="8"/>
+<text class="svg-title" x="750.0" y="45">果树种子育苗系统 · 硬件接线图</text>
+<text class="svg-subtitle" x="750.0" y="65">STM32F103ZET6 · 正点原子精英V2 · 58路IO分配</text>
 <line x1="150" y1="50" x2="1380" y2="50" stroke="#ef4444" stroke-width="2.5" opacity="0.6"/>
 <text x="155" y="45" fill="#ef4444" font-size="10" font-family="Consolas" font-weight="bold">+12V</text>
 <line x1="150" y1="70" x2="1380" y2="70" stroke="#fb923c" stroke-width="2.5" opacity="0.6"/>
@@ -1039,7 +1057,7 @@ svg.highlight-mode .module.active .module-box { stroke-width: 3; filter: brightn
 <path class="wire wire-B2" data-module="B2" data-from="JTAG 20针.TDI" data-to="STM32.PA15" d="M 805,1200 L 805,1120 L 760,1120 L 760,313 L 620,313" fill="none" stroke="#94a3b8" stroke-width="1.5" opacity="0.7"/>
 <path class="wire wire-B2" data-module="B2" data-from="JTAG 20针.TDO" data-to="STM32.PB3" d="M 805,1200 L 805,1108 L 760,1108 L 760,369 L 620,369" fill="none" stroke="#94a3b8" stroke-width="1.5" opacity="0.7"/>
 <path class="wire wire-B2" data-module="B2" data-from="JTAG 20针.nRST" data-to="STM32.PB4" d="M 805,1200 L 805,1096 L 760,1096 L 760,385 L 620,385" fill="none" stroke="#94a3b8" stroke-width="1.5" opacity="0.7"/>
-<text class="svg-footer" x="950.0" y="1725">V2.6 · 主题切换 · 居中布局 · 交互高亮 · 智能绕行</text>
+<text class="svg-footer" x="750.0" y="1725">V2.6 · 主题切换 · 居中布局 · 交互高亮 · 智能绕行</text>
 </svg>
 </div>
 
