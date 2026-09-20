@@ -274,7 +274,49 @@ section{position:relative;z-index:2;}
   -webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent;}
 .stat-label{color:var(--muted);font-size:0.88rem;margin-top:6px;}
 
-/* 表格 */
+/* 3D 环绕倾斜卡片 (Aceternity 3D Card + React Bits Tilt) */
+.tilt-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(270px,1fr));gap:22px;
+  perspective:1200px;}
+.tilt-card{position:relative;border-radius:18px;padding:1.5px;
+  background:rgba(255,255,255,0.05);
+  transform-style:preserve-3d;transition:transform .15s ease-out,box-shadow .4s;
+  will-change:transform;}
+.tilt-card::before{content:'';position:absolute;inset:0;border-radius:18px;
+  background:radial-gradient(420px circle at var(--mx,50%) var(--my,50%),
+    rgba(74,222,128,0.22),transparent 45%);
+  opacity:0;transition:opacity .4s;pointer-events:none;z-index:2;}
+.tilt-card:hover::before{opacity:1;}
+.tilt-card::after{content:'';position:absolute;inset:0;border-radius:18px;
+  background:linear-gradient(135deg,rgba(74,222,128,0.35),transparent 45%,rgba(251,191,36,0.18));
+  -webkit-mask:linear-gradient(#000 0 0) content-box,linear-gradient(#000 0 0);
+  -webkit-mask-composite:xor;mask-composite:exclude;padding:1.5px;opacity:0;transition:opacity .4s;z-index:2;}
+.tilt-card:hover::after{opacity:1;}
+.tilt-card:hover{box-shadow:0 30px 70px rgba(0,0,0,0.5),0 0 50px rgba(34,197,94,0.15);}
+.tilt-inner{position:relative;border-radius:17px;padding:24px;height:100%;
+  background:linear-gradient(160deg,rgba(16,24,40,0.95),rgba(8,14,26,0.92));
+  transform-style:preserve-3d;overflow:hidden;}
+/* 卡片光泽（跟随鼠标） */
+.tilt-glare{position:absolute;inset:0;border-radius:17px;pointer-events:none;z-index:3;
+  background:radial-gradient(300px circle at var(--mx,50%) var(--my,50%),
+    rgba(255,255,255,0.08),transparent 55%);opacity:0;transition:opacity .3s;}
+.tilt-card:hover .tilt-glare{opacity:1;}
+.tilt-icon{width:56px;height:56px;border-radius:14px;display:flex;align-items:center;justify-content:center;
+  font-size:1.7rem;margin-bottom:16px;transform:translateZ(45px);
+  transition:transform .4s;position:relative;z-index:1;}
+.tilt-cat{position:absolute;top:20px;right:20px;transform:translateZ(35px);}
+.tilt-name{font-size:1.12rem;font-weight:700;color:#fff;margin-bottom:6px;
+  transform:translateZ(30px);position:relative;z-index:1;}
+.tilt-model{font-size:0.88rem;font-family:monospace;color:var(--gold);margin-bottom:12px;
+  transform:translateZ(25px);position:relative;z-index:1;}
+.tilt-desc{color:var(--muted);font-size:0.85rem;line-height:1.65;
+  transform:translateZ(20px);position:relative;z-index:1;}
+.tilt-iface{display:inline-flex;align-items:center;gap:5px;margin-top:14px;padding:4px 12px;
+  border-radius:999px;font-size:0.75rem;font-weight:600;
+  background:rgba(74,222,128,0.1);color:var(--green);border:1px solid rgba(74,222,128,0.2);
+  transform:translateZ(40px);position:relative;z-index:1;}
+.tilt-card:hover .tilt-icon{transform:translateZ(60px) scale(1.08) rotate(-6deg);}
+
+/* 表格（保留，可切换） */
 .spec-table{color:var(--text);border-radius:16px;overflow:hidden;
   background:rgba(10,15,30,0.6);backdrop-filter:blur(16px);}
 .spec-table thead th{background:rgba(74,222,128,0.1);color:var(--green);
@@ -616,25 +658,136 @@ footer{background:rgba(5,8,16,0.9);color:var(--muted);padding:48px 0;
   <div class="container">
     <h2 class="section-title" data-aos="fade-down">技术参数</h2>
     <p class="section-sub" data-aos="fade-up" data-aos-delay="100">系统硬件与通信规格一览</p>
-    <div class="table-responsive" data-aos="fade-up" data-aos-delay="200">
-      <table class="table spec-table table-hover align-middle">
-        <thead><tr><th style="width:120px;">类别</th><th style="width:180px;">部件</th><th style="width:160px;">型号/规格</th><th>功能说明</th><th style="width:80px;">接口</th></tr></thead>
-        <tbody>
-          <tr><td><span class="tag tag-ctrl">主控</span></td><td>STM32 主控芯片</td><td>STM32F103ZET6</td><td>ARM Cortex-M3，系统核心控制器，Keil5 开发</td><td>—</td></tr>
-          <tr><td><span class="tag tag-sens">传感器</span></td><td>空气温湿度</td><td>DHT11 × 4</td><td>采集育苗环境空气温度与湿度</td><td>GPIO</td></tr>
-          <tr><td><span class="tag tag-sens">传感器</span></td><td>光敏传感器</td><td>ADC × 4</td><td>检测光照强度，自动调节补光策略</td><td>ADC</td></tr>
-          <tr><td><span class="tag tag-sens">传感器</span></td><td>图像采集</td><td>USB 摄像头</td><td>实时采集育苗画面，供 YOLO 识别</td><td>USB</td></tr>
-          <tr><td><span class="tag tag-act">执行器</span></td><td>直流风扇</td><td>5V/12V × 2</td><td>高温时散热降温，促进空气流通</td><td>继电器</td></tr>
-          <tr><td><span class="tag tag-act">执行器</span></td><td>加热片</td><td>× 2</td><td>低温环境下加温，维持适宜温度</td><td>继电器</td></tr>
-          <tr><td><span class="tag tag-act">执行器</span></td><td>直流水泵</td><td>× 2</td><td>浇水与空气增湿，带延时保护</td><td>继电器</td></tr>
-          <tr><td><span class="tag tag-act">执行器</span></td><td>步进电机模组</td><td>X/Y 双轴</td><td>移动探针至 YOLO 识别的幼苗坐标</td><td>PWM</td></tr>
-          <tr><td><span class="tag tag-act">执行器</span></td><td>舵机</td><td>× 2</td><td>控制土壤探针升降，完成定点检测</td><td>PWM</td></tr>
-          <tr><td><span class="tag tag-act">执行器</span></td><td>蜂鸣器</td><td>有源</td><td>温度/湿度异常时声光报警</td><td>IO</td></tr>
-          <tr><td><span class="tag tag-act">执行器</span></td><td>LED 状态灯</td><td>WS2812B RGB</td><td>红=萌芽期，黄=子叶期，绿=幼苗期</td><td>IO</td></tr>
-          <tr><td><span class="tag tag-comm">通信</span></td><td>上下位机通信</td><td>ESP8266 WLAN</td><td>WiFi 无线传输，双向数据交互，数据包带校验</td><td>WiFi</td></tr>
-          <tr><td><span class="tag tag-ctrl">上位机</span></td><td>识别与显示</td><td>MATLAB + YOLO</td><td>GUI 数据显示、YOLO 生长识别、参数记录、指令下发</td><td>—</td></tr>
-        </tbody>
-      </table>
+    <div class="tilt-grid" data-aos="fade-up" data-aos-delay="200">
+      <div class="tilt-card" data-aos="fade-up" data-aos-delay="50"><div class="tilt-inner">
+        <div class="tilt-glare"></div>
+        <span class="tag tag-ctrl tilt-cat">主控</span>
+        <div class="tilt-icon" style="background:rgba(230,126,34,0.18);color:#fb923c;"><ion-icon name="hardware-chip"></ion-icon></div>
+        <div class="tilt-name">STM32 主控芯片</div>
+        <div class="tilt-model">STM32F103ZET6</div>
+        <div class="tilt-desc">ARM Cortex-M3，系统核心控制器，Keil5 开发，72MHz 主频</div>
+        <span class="tilt-iface"><ion-icon name="cpu"></ion-icon> 核心</span>
+      </div></div>
+
+      <div class="tilt-card" data-aos="fade-up" data-aos-delay="100"><div class="tilt-inner">
+        <div class="tilt-glare"></div>
+        <span class="tag tag-sens tilt-cat">传感器</span>
+        <div class="tilt-icon" style="background:rgba(21,101,192,0.18);color:#79c0ff;"><ion-icon name="thermometer"></ion-icon></div>
+        <div class="tilt-name">空气温湿度</div>
+        <div class="tilt-model">DHT11 × 4</div>
+        <div class="tilt-desc">采集育苗环境空气温度与湿度，4 路分区监测</div>
+        <span class="tilt-iface"><ion-icon name="git-commit"></ion-icon> GPIO</span>
+      </div></div>
+
+      <div class="tilt-card" data-aos="fade-up" data-aos-delay="150"><div class="tilt-inner">
+        <div class="tilt-glare"></div>
+        <span class="tag tag-sens tilt-cat">传感器</span>
+        <div class="tilt-icon" style="background:rgba(21,101,192,0.18);color:#79c0ff;"><ion-icon name="sunny"></ion-icon></div>
+        <div class="tilt-name">光敏传感器</div>
+        <div class="tilt-model">ADC × 4</div>
+        <div class="tilt-desc">检测光照强度，自动调节补光策略</div>
+        <span class="tilt-iface"><ion-icon name="pulse"></ion-icon> ADC</span>
+      </div></div>
+
+      <div class="tilt-card" data-aos="fade-up" data-aos-delay="200"><div class="tilt-inner">
+        <div class="tilt-glare"></div>
+        <span class="tag tag-sens tilt-cat">传感器</span>
+        <div class="tilt-icon" style="background:rgba(21,101,192,0.18);color:#79c0ff;"><ion-icon name="camera"></ion-icon></div>
+        <div class="tilt-name">图像采集</div>
+        <div class="tilt-model">USB 摄像头</div>
+        <div class="tilt-desc">实时采集育苗画面，供 YOLO 识别</div>
+        <span class="tilt-iface"><ion-icon name="logo-usb"></ion-icon> USB</span>
+      </div></div>
+
+      <div class="tilt-card" data-aos="fade-up" data-aos-delay="250"><div class="tilt-inner">
+        <div class="tilt-glare"></div>
+        <span class="tag tag-act tilt-cat">执行器</span>
+        <div class="tilt-icon" style="background:rgba(46,158,107,0.18);color:#4ade80;"><ion-icon name="sync"></ion-icon></div>
+        <div class="tilt-name">直流风扇</div>
+        <div class="tilt-model">5V/12V × 2</div>
+        <div class="tilt-desc">高温时散热降温，促进空气流通</div>
+        <span class="tilt-iface"><ion-icon name="toggle"></ion-icon> 继电器</span>
+      </div></div>
+
+      <div class="tilt-card" data-aos="fade-up" data-aos-delay="300"><div class="tilt-inner">
+        <div class="tilt-glare"></div>
+        <span class="tag tag-act tilt-cat">执行器</span>
+        <div class="tilt-icon" style="background:rgba(46,158,107,0.18);color:#4ade80;"><ion-icon name="flame"></ion-icon></div>
+        <div class="tilt-name">加热片</div>
+        <div class="tilt-model">× 2</div>
+        <div class="tilt-desc">低温环境下加温，维持适宜温度</div>
+        <span class="tilt-iface"><ion-icon name="toggle"></ion-icon> 继电器</span>
+      </div></div>
+
+      <div class="tilt-card" data-aos="fade-up" data-aos-delay="350"><div class="tilt-inner">
+        <div class="tilt-glare"></div>
+        <span class="tag tag-act tilt-cat">执行器</span>
+        <div class="tilt-icon" style="background:rgba(46,158,107,0.18);color:#4ade80;"><ion-icon name="water"></ion-icon></div>
+        <div class="tilt-name">直流水泵</div>
+        <div class="tilt-model">× 2</div>
+        <div class="tilt-desc">浇水与空气增湿，带延时保护</div>
+        <span class="tilt-iface"><ion-icon name="toggle"></ion-icon> 继电器</span>
+      </div></div>
+
+      <div class="tilt-card" data-aos="fade-up" data-aos-delay="400"><div class="tilt-inner">
+        <div class="tilt-glare"></div>
+        <span class="tag tag-act tilt-cat">执行器</span>
+        <div class="tilt-icon" style="background:rgba(46,158,107,0.18);color:#4ade80;"><ion-icon name="move"></ion-icon></div>
+        <div class="tilt-name">步进电机模组</div>
+        <div class="tilt-model">X/Y 双轴</div>
+        <div class="tilt-desc">移动探针至 YOLO 识别的幼苗坐标，精准定位</div>
+        <span class="tilt-iface"><ion-icon name="waveform"></ion-icon> PWM</span>
+      </div></div>
+
+      <div class="tilt-card" data-aos="fade-up" data-aos-delay="450"><div class="tilt-inner">
+        <div class="tilt-glare"></div>
+        <span class="tag tag-act tilt-cat">执行器</span>
+        <div class="tilt-icon" style="background:rgba(46,158,107,0.18);color:#4ade80;"><ion-icon name="options"></ion-icon></div>
+        <div class="tilt-name">舵机</div>
+        <div class="tilt-model">× 2</div>
+        <div class="tilt-desc">控制土壤探针升降，完成定点检测</div>
+        <span class="tilt-iface"><ion-icon name="waveform"></ion-icon> PWM</span>
+      </div></div>
+
+      <div class="tilt-card" data-aos="fade-up" data-aos-delay="500"><div class="tilt-inner">
+        <div class="tilt-glare"></div>
+        <span class="tag tag-act tilt-cat">执行器</span>
+        <div class="tilt-icon" style="background:rgba(46,158,107,0.18);color:#4ade80;"><ion-icon name="notifications"></ion-icon></div>
+        <div class="tilt-name">蜂鸣器</div>
+        <div class="tilt-model">有源</div>
+        <div class="tilt-desc">温度/湿度异常时声光报警</div>
+        <span class="tilt-iface"><ion-icon name="git-commit"></ion-icon> IO</span>
+      </div></div>
+
+      <div class="tilt-card" data-aos="fade-up" data-aos-delay="550"><div class="tilt-inner">
+        <div class="tilt-glare"></div>
+        <span class="tag tag-act tilt-cat">执行器</span>
+        <div class="tilt-icon" style="background:rgba(234,179,8,0.18);color:#facc15;"><ion-icon name="bulb"></ion-icon></div>
+        <div class="tilt-name">LED 状态灯</div>
+        <div class="tilt-model">WS2812B RGB</div>
+        <div class="tilt-desc">红=萌芽期，黄=子叶期，绿=幼苗期</div>
+        <span class="tilt-iface"><ion-icon name="git-commit"></ion-icon> IO</span>
+      </div></div>
+
+      <div class="tilt-card" data-aos="fade-up" data-aos-delay="600"><div class="tilt-inner">
+        <div class="tilt-glare"></div>
+        <span class="tag tag-comm tilt-cat">通信</span>
+        <div class="tilt-icon" style="background:rgba(168,85,247,0.18);color:#c084fc;"><ion-icon name="wifi"></ion-icon></div>
+        <div class="tilt-name">上下位机通信</div>
+        <div class="tilt-model">ESP8266 WLAN</div>
+        <div class="tilt-desc">WiFi 无线传输，双向数据交互，数据包带校验</div>
+        <span class="tilt-iface"><ion-icon name="wifi"></ion-icon> WiFi</span>
+      </div></div>
+
+      <div class="tilt-card" data-aos="fade-up" data-aos-delay="650"><div class="tilt-inner">
+        <div class="tilt-glare"></div>
+        <span class="tag tag-ctrl tilt-cat">上位机</span>
+        <div class="tilt-icon" style="background:rgba(230,126,34,0.18);color:#fb923c;"><ion-icon name="bar-chart"></ion-icon></div>
+        <div class="tilt-name">识别与显示</div>
+        <div class="tilt-model">MATLAB + YOLO</div>
+        <div class="tilt-desc">GUI 数据显示、YOLO 生长识别、参数记录、指令下发</div>
+        <span class="tilt-iface"><ion-icon name="desktop"></ion-icon> 上位机</span>
+      </div></div>
     </div>
     <div class="text-center mt-5" data-aos="fade-up" data-aos-delay="300">
       <button class="glow-btn" onclick="toggleHwDiagram()">
@@ -810,6 +963,38 @@ function initAnimations(){
       card.style.setProperty('--my',(e.clientY-r.top)+'px');
     });
   });
+
+  /* ===== 3D 环绕倾斜卡片 (Aceternity 3D Card / React Bits Tilt) ===== */
+  const canHover=window.matchMedia('(hover:hover)').matches;
+  if(canHover){
+    document.querySelectorAll('.tilt-card').forEach(card=>{
+      const inner=card.querySelector('.tilt-inner');
+      let rafId=null;
+      card.addEventListener('mousemove',e=>{
+        const r=card.getBoundingClientRect();
+        const x=e.clientX-r.left, y=e.clientY-r.top;
+        const px=x/r.width, py=y/r.height;
+        // 鼠标位置变量（边框发光 + 光泽）
+        card.style.setProperty('--mx',x+'px');
+        card.style.setProperty('--my',y+'px');
+        if(rafId)cancelAnimationFrame(rafId);
+        rafId=requestAnimationFrame(()=>{
+          const ry=(px-0.5)*18;   // rotateY
+          const rx=(0.5-py)*18;   // rotateX
+          inner.style.transform='rotateX('+rx.toFixed(2)+'deg) rotateY('+ry.toFixed(2)+'deg) scale(1.03)';
+        });
+      });
+      card.addEventListener('mouseleave',()=>{
+        if(rafId)cancelAnimationFrame(rafId);
+        inner.style.transition='transform .6s cubic-bezier(.2,.8,.2,1)';
+        inner.style.transform='rotateX(0) rotateY(0) scale(1)';
+        setTimeout(()=>{inner.style.transition='transform .15s ease-out';},600);
+      });
+      card.addEventListener('mouseenter',()=>{
+        inner.style.transition='transform .1s ease-out';
+      });
+    });
+  }
 
   /* ===== Three.js 粒子球 ===== */
   const canvas=document.getElementById('three-canvas');
