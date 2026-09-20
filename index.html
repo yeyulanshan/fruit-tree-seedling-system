@@ -418,6 +418,129 @@ footer{background:rgba(5,8,16,0.9);color:var(--muted);padding:48px 0;
   .shooting-star{display:none;}
 }
 
+/* ===== 故事叙事 · 不再独自生长 ===== */
+.story-section{
+  position:relative;
+  padding:130px 0 120px;
+  background:
+    radial-gradient(ellipse 80% 45% at 50% 0%, rgba(34,197,94,0.10), transparent 70%),
+    radial-gradient(ellipse 70% 45% at 50% 100%, rgba(251,191,36,0.08), transparent 70%),
+    linear-gradient(180deg,#04070d 0%,#070c16 50%,#04070d 100%);
+  overflow:hidden;
+}
+.story-section::before{
+  content:'';position:absolute;inset:0;
+  background-image:radial-gradient(rgba(74,222,128,0.06) 1px,transparent 1px);
+  background-size:38px 38px;
+  mask-image:radial-gradient(ellipse 70% 60% at 50% 50%,#000,transparent 75%);
+  -webkit-mask-image:radial-gradient(ellipse 70% 60% at 50% 50%,#000,transparent 75%);
+  pointer-events:none;
+}
+.story-eyebrow{
+  text-align:center;color:var(--green);
+  letter-spacing:0.45em;font-size:0.8rem;font-weight:600;
+  margin-bottom:30px;position:relative;
+}
+.story-eyebrow::before,.story-eyebrow::after{
+  content:'';display:inline-block;width:42px;height:1px;
+  background:linear-gradient(90deg,transparent,var(--green));
+  vertical-align:middle;margin:0 18px;opacity:0.7;
+}
+.story-eyebrow::after{background:linear-gradient(90deg,var(--green),transparent);}
+.story-opening{text-align:center;max-width:780px;margin:0 auto 110px;position:relative;}
+.story-opening .line{
+  display:block;font-size:clamp(1.9rem,4.6vw,3.5rem);
+  font-weight:900;line-height:1.55;letter-spacing:0.06em;color:#f1f5f9;
+}
+.story-opening .line.accent{
+  background:linear-gradient(135deg,#4ade80,#fbbf24);
+  -webkit-background-clip:text;background-clip:text;
+  -webkit-text-fill-color:transparent;
+  filter:drop-shadow(0 0 26px rgba(74,222,128,0.25));
+}
+/* 时间线 */
+.story-timeline{position:relative;max-width:940px;margin:0 auto;padding:10px 0;}
+.story-line{
+  position:absolute;left:50%;top:0;bottom:0;width:2px;
+  transform:translateX(-50%) scaleY(0);transform-origin:top;
+  background:linear-gradient(to bottom,
+    transparent 0%,var(--green) 10%,var(--green2) 38%,
+    var(--gold) 72%,var(--gold) 88%,transparent 100%);
+  box-shadow:0 0 18px rgba(74,222,128,0.45);
+  border-radius:2px;
+}
+.story-chapter{position:relative;width:50%;padding:0 58px 74px;}
+.story-chapter.left{left:0;text-align:right;}
+.story-chapter.right{left:50%;text-align:left;}
+.story-node{
+  position:absolute;top:6px;width:20px;height:20px;border-radius:50%;
+  background:radial-gradient(circle at 35% 35%,#86efac,#22c55e);
+  border:3px solid #070c16;
+  box-shadow:0 0 0 2px rgba(74,222,128,0.45),0 0 26px rgba(74,222,128,0.75);
+  z-index:2;
+}
+.story-chapter.left .story-node{right:-10px;}
+.story-chapter.right .story-node{left:-10px;}
+.story-num{
+  font-size:3.4rem;font-weight:900;line-height:1;
+  font-family:monospace;
+  background:linear-gradient(135deg,rgba(74,222,128,0.55),rgba(251,191,36,0.35));
+  -webkit-background-clip:text;background-clip:text;
+  -webkit-text-fill-color:transparent;
+  margin-bottom:6px;
+}
+.story-step{
+  display:inline-flex;align-items:center;gap:10px;
+  font-size:0.72rem;letter-spacing:0.32em;color:var(--gold);
+  font-weight:600;margin-bottom:16px;
+}
+.story-step .cn{font-size:1.35rem;letter-spacing:0.12em;color:#fff;font-weight:800;}
+.story-step ion-icon{font-size:1.1rem;color:var(--green);}
+.story-body{
+  color:#cbd5e1;font-size:1.02rem;line-height:2.05;
+  margin-bottom:18px;white-space:pre-line;
+  text-shadow:0 2px 12px rgba(0,0,0,0.5);
+}
+.story-tech{
+  display:inline-flex;align-items:center;gap:8px;
+  padding:8px 18px;border-radius:999px;font-size:0.82rem;
+  background:rgba(74,222,128,0.08);
+  border:1px solid rgba(74,222,128,0.28);
+  color:var(--green);backdrop-filter:blur(6px);
+}
+.story-tech ion-icon{font-size:1rem;}
+.story-chapter.right .story-tech{flex-direction:row;}
+/* 结尾金句 */
+.story-closing{text-align:center;max-width:840px;margin:100px auto 0;position:relative;}
+.story-seed{
+  font-size:3.2rem;display:inline-block;margin-bottom:30px;
+  filter:drop-shadow(0 0 32px rgba(74,222,128,0.65));
+  animation:float 4.5s ease-in-out infinite;
+}
+.story-closing .quote{
+  font-size:clamp(1.8rem,4.4vw,3.2rem);
+  font-weight:900;line-height:1.65;letter-spacing:0.05em;color:#f1f5f9;
+}
+.story-closing .quote .gold{
+  background:linear-gradient(135deg,#fbbf24,#fde68a,#4ade80);
+  background-size:200% auto;
+  -webkit-background-clip:text;background-clip:text;
+  -webkit-text-fill-color:transparent;
+  animation:goldShine 4s linear infinite;
+}
+@keyframes goldShine{to{background-position:200% center;}}
+.story-closing .sub{
+  margin-top:36px;color:var(--muted);font-size:1.08rem;line-height:2.1;
+}
+.story-closing .sub strong{color:var(--green);font-weight:700;}
+@media(max-width:768px){
+  .story-section{padding:90px 0 80px;}
+  .story-line{left:22px;}
+  .story-chapter{width:100%;left:0!important;text-align:left!important;padding:0 0 56px 60px;}
+  .story-chapter.left .story-node,.story-chapter.right .story-node{left:12px;right:auto;}
+  .story-opening{margin-bottom:70px;}
+}
+
 </style>
 </head>
 <body>
@@ -431,6 +554,7 @@ footer{background:rgba(5,8,16,0.9);color:var(--muted);padding:48px 0;
 <div class="scroll-progress" id="scrollProgress"></div>
 <nav class="side-nav">
   <a href="#top" class="active" data-section="top"><ion-icon name="home"></ion-icon><span class="nav-label">首页</span></a>
+  <a href="#story" data-section="story"><ion-icon name="book"></ion-icon><span class="nav-label">故事</span></a>
   <a href="#architecture" data-section="architecture"><ion-icon name="git-network"></ion-icon><span class="nav-label">系统架构</span></a>
   <a href="#workflow" data-section="workflow"><ion-icon name="git-branch"></ion-icon><span class="nav-label">工作流程</span></a>
   <a href="#features" data-section="features"><ion-icon name="star"></ion-icon><span class="nav-label">核心特性</span></a>
@@ -459,6 +583,7 @@ footer{background:rgba(5,8,16,0.9);color:var(--muted);padding:48px 0;
     </button>
     <div class="collapse navbar-collapse" id="navMenu">
       <ul class="navbar-nav ms-auto">
+        <li class="nav-item"><a class="nav-link" href="#story">故事</a></li>
         <li class="nav-item"><a class="nav-link" href="#architecture">系统架构</a></li>
         <li class="nav-item"><a class="nav-link" href="#workflow">工作流程</a></li>
         <li class="nav-item"><a class="nav-link" href="#features">核心特性</a></li>
@@ -552,6 +677,78 @@ footer{background:rgba(5,8,16,0.9);color:var(--muted);padding:48px 0;
     <div class="marquee-item"><ion-icon name="construct"></ion-icon> KiCad 原理图</div>
   </div>
 </div>
+
+<!-- ===== 故事 · 不再独自生长 ===== -->
+<section id="story" class="story-section">
+  <div class="container position-relative">
+    <div class="story-eyebrow" data-aos="fade-up">写给一颗种子的信 · A LETTER TO A SEED</div>
+    <div class="story-opening">
+      <span class="line" data-aos="fade-up" data-aos-delay="100">泥土之下，没有光。</span>
+      <span class="line accent" data-aos="fade-up" data-aos-delay="300">但一颗种子，始终相信光。</span>
+    </div>
+
+    <div class="story-timeline">
+      <div class="story-line" id="storyLine"></div>
+
+      <div class="story-chapter left">
+        <div class="story-node"></div>
+        <div class="story-num" data-aos="fade-up">01</div>
+        <div class="story-step" data-aos="fade-up" data-aos-delay="80"><ion-icon name="moon"></ion-icon><span class="cn">沉睡</span> THE WAITING</div>
+        <div class="story-body" data-aos="fade-up" data-aos-delay="140">在被看见之前，
+它已在黑暗里抱守着整个春天的秘密。
+亿万年来，它只能赌——
+赌一场雨，赌一缕光，
+赌一个不被辜负的明天。</div>
+        <div class="story-tech" data-aos="fade-up" data-aos-delay="200"><ion-icon name="thermometer"></ion-icon> DHT11 感知冷暖 · 光敏电阻守候黎明</div>
+      </div>
+
+      <div class="story-chapter right">
+        <div class="story-node"></div>
+        <div class="story-num" data-aos="fade-up">02</div>
+        <div class="story-step" data-aos="fade-up" data-aos-delay="80"><ion-icon name="eye"></ion-icon><span class="cn">注视</span> THE GAZE</div>
+        <div class="story-body" data-aos="fade-up" data-aos-delay="140">科技的眼睛，第一次为它睁开。
+STM32 以 72MHz 的心跳，
+日夜丈量它身边的冷暖干湿；
+摄像头不眨眼地凝望，
+YOLO 学会辨认它每一次细微的舒展。</div>
+        <div class="story-tech" data-aos="fade-up" data-aos-delay="200"><ion-icon name="camera"></ion-icon> 四路传感器 + 实时视觉，每次变化都不被忽略</div>
+      </div>
+
+      <div class="story-chapter left">
+        <div class="story-node"></div>
+        <div class="story-num" data-aos="fade-up">03</div>
+        <div class="story-step" data-aos="fade-up" data-aos-delay="80"><ion-icon name="shield-checkmark"></ion-icon><span class="cn">守护</span> THE CARE</div>
+        <div class="story-body" data-aos="fade-up" data-aos-delay="140">它冷了，加热片像太阳一样醒来；
+它渴了，水泵替它想起雨的味道；
+它闷了，风扇吹来穿堂的风；
+它怕黑，灯带为它留一盏温柔的灯。</div>
+        <div class="story-tech" data-aos="fade-up" data-aos-delay="200"><ion-icon name="toggle"></ion-icon> 继电器 · PWM · 步进电机，每个执行器都是一次回应</div>
+      </div>
+
+      <div class="story-chapter right">
+        <div class="story-node"></div>
+        <div class="story-num" data-aos="fade-up">04</div>
+        <div class="story-step" data-aos="fade-up" data-aos-delay="80"><ion-icon name="leaf"></ion-icon><span class="cn">发芽</span> THE AWAKENING</div>
+        <div class="story-body" data-aos="fade-up" data-aos-delay="140">我们无法替一颗种子发芽。
+但我们可以让它，
+不必独自面对风雨。</div>
+        <div class="story-tech" data-aos="fade-up" data-aos-delay="200"><ion-icon name="leaf"></ion-icon> 萌芽期 · 子叶期 · 幼苗期，三阶段闭环全程陪伴</div>
+      </div>
+    </div>
+
+    <div class="story-closing">
+      <div class="story-seed" data-aos="zoom-in">🌱</div>
+      <div class="quote" data-aos="fade-up">
+        代码没有温度，<br>
+        但代码守护的，<span class="gold">是温度本身。</span>
+      </div>
+      <div class="sub" data-aos="fade-up" data-aos-delay="200">
+        我们写的不是代码，是给未来的一封情书。<br>
+        <strong>让每一颗种子，都被认真对待。</strong>
+      </div>
+    </div>
+  </div>
+</section>
 
 <!-- ===== 系统架构 ===== -->
 <section id="architecture" class="py-5">
@@ -955,6 +1152,14 @@ window.addEventListener('load',()=>{
 
 function initAnimations(){
   AOS.init({duration:800,easing:'ease-out-cubic',once:true,offset:80});
+
+  /* 故事时间线随滚动生长 */
+  if(window.gsap && window.ScrollTrigger){
+    gsap.fromTo('#storyLine',{scaleY:0},{
+      scaleY:1,ease:'none',
+      scrollTrigger:{trigger:'.story-timeline',start:'top 75%',end:'bottom 55%',scrub:0.8}
+    });
+  }
 
   /* ===== 文字逐字生成 (Text Generate Effect) ===== */
   const titleEl=document.getElementById('heroTitle');
