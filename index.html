@@ -533,6 +533,27 @@ footer{background:rgba(5,8,16,0.9);color:var(--muted);padding:48px 0;
   margin-top:36px;color:var(--muted);font-size:1.08rem;line-height:2.1;
 }
 .story-closing .sub strong{color:var(--green);font-weight:700;}
+.story-closing .final{
+  margin-top:48px;
+  font-size:clamp(1.35rem,3.1vw,2.05rem);
+  font-weight:800;line-height:1.95;letter-spacing:0.05em;color:#e2e8f0;
+  padding-top:40px;position:relative;
+}
+.story-closing .final::before{
+  content:'';position:absolute;top:0;left:50%;transform:translateX(-50%);
+  width:70px;height:1px;background:linear-gradient(90deg,transparent,var(--gold),transparent);
+  opacity:0.6;
+}
+.story-closing .final .bloom{
+  display:inline-block;
+  background:linear-gradient(135deg,#4ade80,#86efac 40%,#fbbf24);
+  background-size:200% auto;
+  -webkit-background-clip:text;background-clip:text;
+  -webkit-text-fill-color:transparent;
+  animation:goldShine 5s linear infinite;
+  font-weight:900;
+  filter:drop-shadow(0 0 22px rgba(74,222,128,0.3));
+}
 @media(max-width:768px){
   .story-section{padding:90px 0 80px;}
   .story-line{left:22px;}
@@ -739,12 +760,20 @@ YOLO 学会辨认它每一次细微的舒展。</div>
     <div class="story-closing">
       <div class="story-seed" data-aos="zoom-in">🌱</div>
       <div class="quote" data-aos="fade-up">
-        代码没有温度，<br>
-        但代码守护的，<span class="gold">是温度本身。</span>
+        我能计算温度，<br>
+        却无法计算——<br>
+        <span class="gold">生命。</span>
       </div>
       <div class="sub" data-aos="fade-up" data-aos-delay="200">
-        我们写的不是代码，是给未来的一封情书。<br>
-        <strong>让每一颗种子，都被认真对待。</strong>
+        我能做的，是把风、雨、光、水，<br>
+        一样一样替你备好；<br>
+        然后退后一步，<br>
+        <strong>把破土的权利，还给你。</strong>
+      </div>
+      <div class="final" data-aos="fade-up" data-aos-delay="400">
+        愿你在我看不见的地方，<br>
+        安心地，<br>
+        长成一棵——<span class="bloom">开花结果的树。</span>
       </div>
     </div>
   </div>
