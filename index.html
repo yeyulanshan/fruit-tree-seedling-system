@@ -274,16 +274,44 @@ section{position:relative;z-index:2;}
   -webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent;}
 .stat-label{color:var(--muted);font-size:0.88rem;margin-top:6px;}
 
-/* 3D 环绕倾斜卡片 (Aceternity 3D Card + React Bits Tilt) */
-.tilt-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(270px,1fr));gap:22px;
-  perspective:1200px;}
+/* 3D 旋转木马 (Carousel) */
+.carousel-stage{position:relative;height:560px;margin:10px 0 0;
+  perspective:3000px;perspective-origin:50% 50%;
+  cursor:grab;touch-action:pan-y;user-select:none;overflow:hidden;}
+.carousel-stage.grabbing{cursor:grabbing;}
+.carousel-track{position:absolute;inset:0;transform-style:preserve-3d;}
+.wheel-item{position:absolute;left:50%;top:50%;width:280px;height:400px;
+  margin-left:-140px;margin-top:-200px;
+  transform-style:preserve-3d;
+  transition:opacity .4s,filter .4s;}
+.wheel-item.is-front .tilt-card{
+  box-shadow:0 30px 80px rgba(0,0,0,0.6),0 0 70px rgba(34,197,94,0.28);}
+.wheel-item .tilt-card{width:100%;height:100%;}
+.wheel-item .tilt-inner{height:100%;display:flex;flex-direction:column;justify-content:center;}
+.wheel-item .tilt-desc{flex:1;}
+.carousel-controls{display:flex;align-items:center;justify-content:center;gap:28px;margin-top:26px;}
+.carousel-btn{width:54px;height:54px;border-radius:50%;
+  background:rgba(74,222,128,0.08);border:1.5px solid rgba(74,222,128,0.4);
+  color:var(--green);font-size:1.8rem;line-height:1;cursor:pointer;
+  display:flex;align-items:center;justify-content:center;
+  transition:all .3s;backdrop-filter:blur(10px);}
+.carousel-btn:hover{background:var(--green);color:#050810;
+  box-shadow:0 0 28px rgba(74,222,128,0.6);transform:scale(1.12);}
+.carousel-btn:active{transform:scale(0.95);}
+.carousel-dots{display:flex;gap:8px;align-items:center;flex-wrap:wrap;justify-content:center;max-width:340px;}
+.carousel-dot{width:8px;height:8px;border-radius:50%;background:rgba(255,255,255,0.18);
+  cursor:pointer;transition:all .3s;border:none;padding:0;}
+.carousel-dot.active{background:var(--green);width:26px;border-radius:4px;
+  box-shadow:0 0 12px rgba(74,222,128,0.7);}
+.carousel-hint{text-align:center;color:var(--muted);font-size:0.85rem;margin-top:16px;}
+.carousel-hint ion-icon{color:var(--green);vertical-align:-2px;}
+
+/* 卡片视觉（旋转木马内静态卡片） */
 .tilt-card{position:relative;border-radius:18px;padding:1.5px;
-  background:rgba(255,255,255,0.05);
-  transform-style:preserve-3d;transition:transform .15s ease-out,box-shadow .4s;
-  will-change:transform;}
+  background:rgba(255,255,255,0.05);transition:box-shadow .4s;height:100%;}
 .tilt-card::before{content:'';position:absolute;inset:0;border-radius:18px;
   background:radial-gradient(420px circle at var(--mx,50%) var(--my,50%),
-    rgba(74,222,128,0.22),transparent 45%);
+    rgba(74,222,128,0.2),transparent 45%);
   opacity:0;transition:opacity .4s;pointer-events:none;z-index:2;}
 .tilt-card:hover::before{opacity:1;}
 .tilt-card::after{content:'';position:absolute;inset:0;border-radius:18px;
@@ -291,30 +319,24 @@ section{position:relative;z-index:2;}
   -webkit-mask:linear-gradient(#000 0 0) content-box,linear-gradient(#000 0 0);
   -webkit-mask-composite:xor;mask-composite:exclude;padding:1.5px;opacity:0;transition:opacity .4s;z-index:2;}
 .tilt-card:hover::after{opacity:1;}
-.tilt-card:hover{box-shadow:0 30px 70px rgba(0,0,0,0.5),0 0 50px rgba(34,197,94,0.15);}
-.tilt-inner{position:relative;border-radius:17px;padding:24px;height:100%;
-  background:linear-gradient(160deg,rgba(16,24,40,0.95),rgba(8,14,26,0.92));
-  transform-style:preserve-3d;overflow:hidden;}
-/* 卡片光泽（跟随鼠标） */
+.tilt-inner{position:relative;border-radius:17px;padding:24px;
+  background:linear-gradient(160deg,rgba(16,24,40,0.97),rgba(8,14,26,0.95));
+  overflow:hidden;}
 .tilt-glare{position:absolute;inset:0;border-radius:17px;pointer-events:none;z-index:3;
   background:radial-gradient(300px circle at var(--mx,50%) var(--my,50%),
     rgba(255,255,255,0.08),transparent 55%);opacity:0;transition:opacity .3s;}
 .tilt-card:hover .tilt-glare{opacity:1;}
-.tilt-icon{width:56px;height:56px;border-radius:14px;display:flex;align-items:center;justify-content:center;
-  font-size:1.7rem;margin-bottom:16px;transform:translateZ(45px);
-  transition:transform .4s;position:relative;z-index:1;}
-.tilt-cat{position:absolute;top:20px;right:20px;transform:translateZ(35px);}
-.tilt-name{font-size:1.12rem;font-weight:700;color:#fff;margin-bottom:6px;
-  transform:translateZ(30px);position:relative;z-index:1;}
-.tilt-model{font-size:0.88rem;font-family:monospace;color:var(--gold);margin-bottom:12px;
-  transform:translateZ(25px);position:relative;z-index:1;}
-.tilt-desc{color:var(--muted);font-size:0.85rem;line-height:1.65;
-  transform:translateZ(20px);position:relative;z-index:1;}
-.tilt-iface{display:inline-flex;align-items:center;gap:5px;margin-top:14px;padding:4px 12px;
-  border-radius:999px;font-size:0.75rem;font-weight:600;
+.tilt-icon{width:54px;height:54px;border-radius:14px;display:flex;align-items:center;justify-content:center;
+  font-size:1.6rem;margin-bottom:12px;transition:transform .4s;position:relative;z-index:1;}
+.tilt-cat{position:absolute;top:20px;right:20px;}
+.tilt-name{font-size:1.08rem;font-weight:700;color:#fff;margin-bottom:6px;position:relative;z-index:1;}
+.tilt-model{font-size:0.85rem;font-family:monospace;color:var(--gold);margin-bottom:10px;position:relative;z-index:1;}
+.tilt-desc{color:var(--muted);font-size:0.83rem;line-height:1.6;position:relative;z-index:1;}
+.tilt-iface{display:inline-flex;align-items:center;gap:5px;margin-top:12px;padding:4px 12px;
+  border-radius:999px;font-size:0.74rem;font-weight:600;
   background:rgba(74,222,128,0.1);color:var(--green);border:1px solid rgba(74,222,128,0.2);
-  transform:translateZ(40px);position:relative;z-index:1;}
-.tilt-card:hover .tilt-icon{transform:translateZ(60px) scale(1.08) rotate(-6deg);}
+  position:relative;z-index:1;}
+.tilt-card:hover .tilt-icon{transform:scale(1.08) rotate(-6deg);}
 
 /* 表格（保留，可切换） */
 .spec-table{color:var(--text);border-radius:16px;overflow:hidden;
@@ -658,8 +680,9 @@ footer{background:rgba(5,8,16,0.9);color:var(--muted);padding:48px 0;
   <div class="container">
     <h2 class="section-title" data-aos="fade-down">技术参数</h2>
     <p class="section-sub" data-aos="fade-up" data-aos-delay="100">系统硬件与通信规格一览</p>
-    <div class="tilt-grid" data-aos="fade-up" data-aos-delay="200">
-      <div class="tilt-card" data-aos="fade-up" data-aos-delay="50"><div class="tilt-inner">
+    <div class="carousel-stage" id="carouselStage" data-aos="fade-up" data-aos-delay="200">
+    <div class="carousel-track" id="carouselTrack">
+      <div class="wheel-item"><div class="tilt-card"><div class="tilt-inner">
         <div class="tilt-glare"></div>
         <span class="tag tag-ctrl tilt-cat">主控</span>
         <div class="tilt-icon" style="background:rgba(230,126,34,0.18);color:#fb923c;"><ion-icon name="hardware-chip"></ion-icon></div>
@@ -667,9 +690,9 @@ footer{background:rgba(5,8,16,0.9);color:var(--muted);padding:48px 0;
         <div class="tilt-model">STM32F103ZET6</div>
         <div class="tilt-desc">ARM Cortex-M3，系统核心控制器，Keil5 开发，72MHz 主频</div>
         <span class="tilt-iface"><ion-icon name="cpu"></ion-icon> 核心</span>
-      </div></div>
+      </div></div></div>
 
-      <div class="tilt-card" data-aos="fade-up" data-aos-delay="100"><div class="tilt-inner">
+      <div class="wheel-item"><div class="tilt-card"><div class="tilt-inner">
         <div class="tilt-glare"></div>
         <span class="tag tag-sens tilt-cat">传感器</span>
         <div class="tilt-icon" style="background:rgba(21,101,192,0.18);color:#79c0ff;"><ion-icon name="thermometer"></ion-icon></div>
@@ -677,9 +700,9 @@ footer{background:rgba(5,8,16,0.9);color:var(--muted);padding:48px 0;
         <div class="tilt-model">DHT11 × 4</div>
         <div class="tilt-desc">采集育苗环境空气温度与湿度，4 路分区监测</div>
         <span class="tilt-iface"><ion-icon name="git-commit"></ion-icon> GPIO</span>
-      </div></div>
+      </div></div></div>
 
-      <div class="tilt-card" data-aos="fade-up" data-aos-delay="150"><div class="tilt-inner">
+      <div class="wheel-item"><div class="tilt-card"><div class="tilt-inner">
         <div class="tilt-glare"></div>
         <span class="tag tag-sens tilt-cat">传感器</span>
         <div class="tilt-icon" style="background:rgba(21,101,192,0.18);color:#79c0ff;"><ion-icon name="sunny"></ion-icon></div>
@@ -687,9 +710,9 @@ footer{background:rgba(5,8,16,0.9);color:var(--muted);padding:48px 0;
         <div class="tilt-model">ADC × 4</div>
         <div class="tilt-desc">检测光照强度，自动调节补光策略</div>
         <span class="tilt-iface"><ion-icon name="pulse"></ion-icon> ADC</span>
-      </div></div>
+      </div></div></div>
 
-      <div class="tilt-card" data-aos="fade-up" data-aos-delay="200"><div class="tilt-inner">
+      <div class="wheel-item"><div class="tilt-card"><div class="tilt-inner">
         <div class="tilt-glare"></div>
         <span class="tag tag-sens tilt-cat">传感器</span>
         <div class="tilt-icon" style="background:rgba(21,101,192,0.18);color:#79c0ff;"><ion-icon name="camera"></ion-icon></div>
@@ -697,9 +720,9 @@ footer{background:rgba(5,8,16,0.9);color:var(--muted);padding:48px 0;
         <div class="tilt-model">USB 摄像头</div>
         <div class="tilt-desc">实时采集育苗画面，供 YOLO 识别</div>
         <span class="tilt-iface"><ion-icon name="logo-usb"></ion-icon> USB</span>
-      </div></div>
+      </div></div></div>
 
-      <div class="tilt-card" data-aos="fade-up" data-aos-delay="250"><div class="tilt-inner">
+      <div class="wheel-item"><div class="tilt-card"><div class="tilt-inner">
         <div class="tilt-glare"></div>
         <span class="tag tag-act tilt-cat">执行器</span>
         <div class="tilt-icon" style="background:rgba(46,158,107,0.18);color:#4ade80;"><ion-icon name="sync"></ion-icon></div>
@@ -707,9 +730,9 @@ footer{background:rgba(5,8,16,0.9);color:var(--muted);padding:48px 0;
         <div class="tilt-model">5V/12V × 2</div>
         <div class="tilt-desc">高温时散热降温，促进空气流通</div>
         <span class="tilt-iface"><ion-icon name="toggle"></ion-icon> 继电器</span>
-      </div></div>
+      </div></div></div>
 
-      <div class="tilt-card" data-aos="fade-up" data-aos-delay="300"><div class="tilt-inner">
+      <div class="wheel-item"><div class="tilt-card"><div class="tilt-inner">
         <div class="tilt-glare"></div>
         <span class="tag tag-act tilt-cat">执行器</span>
         <div class="tilt-icon" style="background:rgba(46,158,107,0.18);color:#4ade80;"><ion-icon name="flame"></ion-icon></div>
@@ -717,9 +740,9 @@ footer{background:rgba(5,8,16,0.9);color:var(--muted);padding:48px 0;
         <div class="tilt-model">× 2</div>
         <div class="tilt-desc">低温环境下加温，维持适宜温度</div>
         <span class="tilt-iface"><ion-icon name="toggle"></ion-icon> 继电器</span>
-      </div></div>
+      </div></div></div>
 
-      <div class="tilt-card" data-aos="fade-up" data-aos-delay="350"><div class="tilt-inner">
+      <div class="wheel-item"><div class="tilt-card"><div class="tilt-inner">
         <div class="tilt-glare"></div>
         <span class="tag tag-act tilt-cat">执行器</span>
         <div class="tilt-icon" style="background:rgba(46,158,107,0.18);color:#4ade80;"><ion-icon name="water"></ion-icon></div>
@@ -727,9 +750,9 @@ footer{background:rgba(5,8,16,0.9);color:var(--muted);padding:48px 0;
         <div class="tilt-model">× 2</div>
         <div class="tilt-desc">浇水与空气增湿，带延时保护</div>
         <span class="tilt-iface"><ion-icon name="toggle"></ion-icon> 继电器</span>
-      </div></div>
+      </div></div></div>
 
-      <div class="tilt-card" data-aos="fade-up" data-aos-delay="400"><div class="tilt-inner">
+      <div class="wheel-item"><div class="tilt-card"><div class="tilt-inner">
         <div class="tilt-glare"></div>
         <span class="tag tag-act tilt-cat">执行器</span>
         <div class="tilt-icon" style="background:rgba(46,158,107,0.18);color:#4ade80;"><ion-icon name="move"></ion-icon></div>
@@ -737,9 +760,9 @@ footer{background:rgba(5,8,16,0.9);color:var(--muted);padding:48px 0;
         <div class="tilt-model">X/Y 双轴</div>
         <div class="tilt-desc">移动探针至 YOLO 识别的幼苗坐标，精准定位</div>
         <span class="tilt-iface"><ion-icon name="waveform"></ion-icon> PWM</span>
-      </div></div>
+      </div></div></div>
 
-      <div class="tilt-card" data-aos="fade-up" data-aos-delay="450"><div class="tilt-inner">
+      <div class="wheel-item"><div class="tilt-card"><div class="tilt-inner">
         <div class="tilt-glare"></div>
         <span class="tag tag-act tilt-cat">执行器</span>
         <div class="tilt-icon" style="background:rgba(46,158,107,0.18);color:#4ade80;"><ion-icon name="options"></ion-icon></div>
@@ -747,9 +770,9 @@ footer{background:rgba(5,8,16,0.9);color:var(--muted);padding:48px 0;
         <div class="tilt-model">× 2</div>
         <div class="tilt-desc">控制土壤探针升降，完成定点检测</div>
         <span class="tilt-iface"><ion-icon name="waveform"></ion-icon> PWM</span>
-      </div></div>
+      </div></div></div>
 
-      <div class="tilt-card" data-aos="fade-up" data-aos-delay="500"><div class="tilt-inner">
+      <div class="wheel-item"><div class="tilt-card"><div class="tilt-inner">
         <div class="tilt-glare"></div>
         <span class="tag tag-act tilt-cat">执行器</span>
         <div class="tilt-icon" style="background:rgba(46,158,107,0.18);color:#4ade80;"><ion-icon name="notifications"></ion-icon></div>
@@ -757,9 +780,9 @@ footer{background:rgba(5,8,16,0.9);color:var(--muted);padding:48px 0;
         <div class="tilt-model">有源</div>
         <div class="tilt-desc">温度/湿度异常时声光报警</div>
         <span class="tilt-iface"><ion-icon name="git-commit"></ion-icon> IO</span>
-      </div></div>
+      </div></div></div>
 
-      <div class="tilt-card" data-aos="fade-up" data-aos-delay="550"><div class="tilt-inner">
+      <div class="wheel-item"><div class="tilt-card"><div class="tilt-inner">
         <div class="tilt-glare"></div>
         <span class="tag tag-act tilt-cat">执行器</span>
         <div class="tilt-icon" style="background:rgba(234,179,8,0.18);color:#facc15;"><ion-icon name="bulb"></ion-icon></div>
@@ -767,9 +790,9 @@ footer{background:rgba(5,8,16,0.9);color:var(--muted);padding:48px 0;
         <div class="tilt-model">WS2812B RGB</div>
         <div class="tilt-desc">红=萌芽期，黄=子叶期，绿=幼苗期</div>
         <span class="tilt-iface"><ion-icon name="git-commit"></ion-icon> IO</span>
-      </div></div>
+      </div></div></div>
 
-      <div class="tilt-card" data-aos="fade-up" data-aos-delay="600"><div class="tilt-inner">
+      <div class="wheel-item"><div class="tilt-card"><div class="tilt-inner">
         <div class="tilt-glare"></div>
         <span class="tag tag-comm tilt-cat">通信</span>
         <div class="tilt-icon" style="background:rgba(168,85,247,0.18);color:#c084fc;"><ion-icon name="wifi"></ion-icon></div>
@@ -777,9 +800,9 @@ footer{background:rgba(5,8,16,0.9);color:var(--muted);padding:48px 0;
         <div class="tilt-model">ESP8266 WLAN</div>
         <div class="tilt-desc">WiFi 无线传输，双向数据交互，数据包带校验</div>
         <span class="tilt-iface"><ion-icon name="wifi"></ion-icon> WiFi</span>
-      </div></div>
+      </div></div></div>
 
-      <div class="tilt-card" data-aos="fade-up" data-aos-delay="650"><div class="tilt-inner">
+      <div class="wheel-item"><div class="tilt-card"><div class="tilt-inner">
         <div class="tilt-glare"></div>
         <span class="tag tag-ctrl tilt-cat">上位机</span>
         <div class="tilt-icon" style="background:rgba(230,126,34,0.18);color:#fb923c;"><ion-icon name="bar-chart"></ion-icon></div>
@@ -787,9 +810,16 @@ footer{background:rgba(5,8,16,0.9);color:var(--muted);padding:48px 0;
         <div class="tilt-model">MATLAB + YOLO</div>
         <div class="tilt-desc">GUI 数据显示、YOLO 生长识别、参数记录、指令下发</div>
         <span class="tilt-iface"><ion-icon name="desktop"></ion-icon> 上位机</span>
-      </div></div>
+      </div></div></div>
+    </div><!-- /carousel-track -->
+    </div><!-- /carousel-stage -->
+    <div class="carousel-controls">
+      <button class="carousel-btn" id="carouselPrev" aria-label="上一个">&#8249;</button>
+      <div class="carousel-dots" id="carouselDots"></div>
+      <button class="carousel-btn" id="carouselNext" aria-label="下一个">&#8250;</button>
     </div>
-    <div class="text-center mt-5" data-aos="fade-up" data-aos-delay="300">
+    <div class="carousel-hint"><ion-icon name="hand-left"></ion-icon> 拖拽旋转 · 点击两侧按钮或圆点切换 · 悬停暂停</div>
+    <div class="text-center mt-4" data-aos="fade-up" data-aos-delay="300">
       <button class="glow-btn" onclick="toggleHwDiagram()">
         <ion-icon name="cog"></ion-icon> 硬件一览 · 查看接线图
       </button>
@@ -964,37 +994,139 @@ function initAnimations(){
     });
   });
 
-  /* ===== 3D 环绕倾斜卡片 (Aceternity 3D Card / React Bits Tilt) ===== */
-  const canHover=window.matchMedia('(hover:hover)').matches;
-  if(canHover){
-    document.querySelectorAll('.tilt-card').forEach(card=>{
-      const inner=card.querySelector('.tilt-inner');
-      let rafId=null;
+  /* ===== 3D 旋转木马 Carousel ===== */
+  (function(){
+    const stage=document.getElementById('carouselStage');
+    const track=document.getElementById('carouselTrack');
+    const items=Array.from(track.querySelectorAll('.wheel-item'));
+    const N=items.length;
+    const STEP=360/N;
+    const RADIUS=580;
+    let rotation=0;
+    let hover=false, dragging=false, dragStartX=0, dragStartRot=0;
+    let velocity=0;
+    let autoSpeed=0.10;
+    let currentIndex=0;
+    const dotsWrap=document.getElementById('carouselDots');
+
+    // 初始化每张卡片角度位置
+    items.forEach((item,i)=>{
+      item.style.transform='rotateY('+(i*STEP)+'deg) translateZ('+RADIUS+'px)';
+    });
+    // 生成圆点
+    items.forEach((_,i)=>{
+      const d=document.createElement('button');
+      d.className='carousel-dot'+(i===0?' active':'');
+      d.setAttribute('aria-label','第'+(i+1)+'个');
+      d.addEventListener('click',()=>goTo(i));
+      dotsWrap.appendChild(d);
+    });
+    const dots=Array.from(dotsWrap.children);
+
+    function norm(a){ // 归一化到 -180~180
+      return ((a+180)%360+360)%360-180;
+    }
+    function update(){
+      items.forEach((item,i)=>{
+        const ang=i*STEP+rotation;
+        item.style.transform='rotateY('+ang+'deg) translateZ('+RADIUS+'px)';
+        const facing=Math.cos(ang*Math.PI/180); // 1 正对, -1 背对
+        let op;
+        if(facing>0){ op=0.25+0.75*facing; } else { op=0.08; }
+        item.style.opacity=op;
+        item.style.filter='blur('+(facing>0.5?0:(1-facing)*2.5)+'px)';
+        item.style.pointerEvents=facing>0.55?'auto':'none';
+      });
+      // 当前正面卡片
+      let idx=Math.round(norm(-rotation)/STEP);
+      idx=((idx%N)+N)%N;
+      if(idx!==currentIndex){
+        currentIndex=idx;
+        items.forEach((it,k)=>it.classList.toggle('is-front',k===idx));
+        dots.forEach((d,k)=>d.classList.toggle('active',k===idx));
+      } else {
+        items.forEach((it,k)=>it.classList.toggle('is-front',k===idx));
+      }
+    }
+    let targetRot=null;
+    function goTo(i){
+      // 计算让 i 转到正面的目标角度（取最近方向）
+      const cur=norm(-rotation);
+      let want=-i*STEP;
+      let diff=norm(want-rotation);
+      // 简化：目标 = rotation + 让卡片i正对的增量
+      const cardAng=norm(i*STEP+rotation);
+      targetRot=rotation - cardAng;
+      // 保证最短路径
+      let d=targetRot-rotation;
+      d=norm(d);
+      targetRot=rotation+d;
+    }
+    function loop(){
+      if(targetRot!==null){
+        const d=targetRot-rotation;
+        if(Math.abs(d)<0.4){rotation=targetRot;targetRot=null;}
+        else{rotation+=d*0.12;}
+      } else if(!hover && !dragging){
+        rotation+=autoSpeed;
+        if(Math.abs(velocity)>0.05){rotation+=velocity;velocity*=0.94;}
+      }
+      update();
+      requestAnimationFrame(loop);
+    }
+    loop();
+
+    // 悬停暂停
+    stage.addEventListener('mouseenter',()=>hover=true);
+    stage.addEventListener('mouseleave',()=>{hover=false;});
+    // 拖拽
+    stage.addEventListener('mousedown',e=>{
+      dragging=true;targetRot=null;
+      stage.classList.add('grabbing');
+      dragStartX=e.clientX;dragStartRot=rotation;velocity=0;
+    });
+    window.addEventListener('mousemove',e=>{
+      if(!dragging)return;
+      const dx=e.clientX-dragStartX;
+      const v=dx*0.35;
+      rotation=dragStartRot+v;
+      velocity=v-(rotation-dragStartRot-v)*0;
+    });
+    window.addEventListener('mouseup',()=>{
+      if(dragging){dragging=false;stage.classList.remove('grabbing');}
+    });
+    // 触摸
+    stage.addEventListener('touchstart',e=>{
+      dragging=true;targetRot=null;
+      dragStartX=e.touches[0].clientX;dragStartRot=rotation;
+    },{passive:true});
+    stage.addEventListener('touchmove',e=>{
+      if(!dragging)return;
+      const dx=e.touches[0].clientX-dragStartX;
+      rotation=dragStartRot+dx*0.35;
+    },{passive:true});
+    stage.addEventListener('touchend',()=>{dragging=false;});
+    // 按钮
+    document.getElementById('carouselPrev').addEventListener('click',()=>{
+      velocity=0;const a=norm(-rotation);
+      let i=Math.round(a/STEP)-1;
+      goTo(((i%N)+N)%N);
+    });
+    document.getElementById('carouselNext').addEventListener('click',()=>{
+      velocity=0;const a=norm(-rotation);
+      let i=Math.round(a/STEP)+1;
+      goTo(((i%N)+N)%N);
+    });
+    // 卡片内鼠标跟随发光
+    items.forEach(item=>{
+      const card=item.querySelector('.tilt-card');
       card.addEventListener('mousemove',e=>{
         const r=card.getBoundingClientRect();
-        const x=e.clientX-r.left, y=e.clientY-r.top;
-        const px=x/r.width, py=y/r.height;
-        // 鼠标位置变量（边框发光 + 光泽）
-        card.style.setProperty('--mx',x+'px');
-        card.style.setProperty('--my',y+'px');
-        if(rafId)cancelAnimationFrame(rafId);
-        rafId=requestAnimationFrame(()=>{
-          const ry=(px-0.5)*18;   // rotateY
-          const rx=(0.5-py)*18;   // rotateX
-          inner.style.transform='rotateX('+rx.toFixed(2)+'deg) rotateY('+ry.toFixed(2)+'deg) scale(1.03)';
-        });
-      });
-      card.addEventListener('mouseleave',()=>{
-        if(rafId)cancelAnimationFrame(rafId);
-        inner.style.transition='transform .6s cubic-bezier(.2,.8,.2,1)';
-        inner.style.transform='rotateX(0) rotateY(0) scale(1)';
-        setTimeout(()=>{inner.style.transition='transform .15s ease-out';},600);
-      });
-      card.addEventListener('mouseenter',()=>{
-        inner.style.transition='transform .1s ease-out';
+        card.style.setProperty('--mx',(e.clientX-r.left)+'px');
+        card.style.setProperty('--my',(e.clientY-r.top)+'px');
       });
     });
-  }
+  })();
 
   /* ===== Three.js 粒子球 ===== */
   const canvas=document.getElementById('three-canvas');
