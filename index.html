@@ -1338,33 +1338,56 @@ function initAnimations(){
     });
   })();
 
-  /* ===== 生命之树（电影级生长 · 分形树） ===== */
+  /* ===== 生命之树（电影级生长 · 离屏烘焙高性能版） ===== */
   (function(){
     const tcv=document.getElementById('treeCanvas');
     if(!tcv)return;
     const tctx=tcv.getContext('2d');
-    let TW=0,TH=0,TDPR=1,mobile=false,segments=[],leaves=[],blooms=[],spores=[],startT=0;
+    let TW=0,TH=0,TDPR=1,mobile=false;
+    let segments=[],leaves=[],blooms=[],spores=[],startT=0;
+    let treeCache,tc,bgCache,spLeaf,spLeaf2,spBloom,spSpore;
+    let leafTwink=[],bloomTwink=[],fullyBaked=false,running=true,pauseAt=0;
     const GROW=4.2;
+    const TAU=Math.PI*2;
     function ease(t){return t<0.5?2*t*t:1-Math.pow(-2*t+2,2)/2;}
+    function makeSprite(stops){
+      const c=document.createElement('canvas');c.width=c.height=64;
+      const x=c.getContext('2d');
+      const g=x.createRadialGradient(32,32,0,32,32,32);
+      for(let i=0;i<stops.length;i++)g.addColorStop(stops[i][0],stops[i][1]);
+      x.fillStyle=g;x.beginPath();x.arc(32,32,32,0,TAU);x.fill();
+      return c;
+    }
+    function drawSp(ctx,sp,x,y,rad,alpha){
+      if(alpha<=0)return;
+      ctx.globalAlpha=alpha;const d=rad*5;
+      ctx.drawImage(sp,x-d,y-d,d*2,d*2);ctx.globalAlpha=1;
+    }
+    function branchColor(ratio,maxD){
+      let r1,g1,b1;
+      if(ratio<0.55){r1=26+ratio*70;g1=180+ratio*30;b1=80;}
+      else{r1=110+(ratio-0.55)*320;g1=190;b1=70;}
+      return 'rgba('+(r1|0)+','+(g1|0)+','+(b1|0)+',';
+    }
     function build(){
-      segments=[];leaves=[];blooms=[];
+      segments=[];leaves=[];blooms=[];leafTwink=[];bloomTwink=[];fullyBaked=false;
       mobile=window.innerWidth<=991;
       const baseX=mobile?TW*0.5:TW*0.87;
       const baseY=mobile?TH*1.18:TH*1.02;
-      const maxD=mobile?8:9;
-      const initLen=TH*(mobile?0.058:0.115);
+      const maxD=mobile?7:9;
+      const initLen=TH*(mobile?0.06:0.12);
       function branch(x,y,angle,len,depth,width,t0){
         const segs=2;let px=x,py=y,a=angle;
         const bend=(Math.random()-0.5)*0.05;
         for(let i=0;i<segs;i++){
           const l=len/segs,nx=px+Math.cos(a)*l,ny=py+Math.sin(a)*l,dur=0.09;
-          segments.push({x1:px,y1:py,x2:nx,y2:ny,depth,width:width*(1-i*0.1),t0,t1:t0+dur});
+          segments.push({x1:px,y1:py,x2:nx,y2:ny,depth,width:width*(1-i*0.1),t0,t1:t0+dur,baked:false});
           t0+=dur;px=nx;py=ny;a+=bend;
         }
         if(depth>=maxD||len<5*TDPR){
           const r=Math.random();
-          if(r<0.16)blooms.push({x:px,y:py,size:(3+Math.random()*3)*TDPR,phase:Math.random()*6.28});
-          else if(r<0.62)leaves.push({x:px,y:py,size:(2+Math.random()*3)*TDPR,phase:Math.random()*6.28,hue:Math.random()});
+          if(r<0.15)blooms.push({x:px,y:py,size:(3+Math.random()*3)*TDPR,phase:Math.random()*TAU,baked:false,twink:false});
+          else if(r<0.6)leaves.push({x:px,y:py,size:(2+Math.random()*3)*TDPR,phase:Math.random()*TAU,hue:Math.random(),baked:false,twink:false});
           return t0;
         }
         let e=branch(px,py,a+(Math.random()-0.5)*0.12,len*0.82,depth+1,width*0.78,t0);
@@ -1372,96 +1395,174 @@ function initAnimations(){
           const ss=(depth%2===0)?1:-1;
           e=branch(px,py,a+ss*(0.48+Math.random()*0.26),len*0.62,depth+1,width*0.55,t0+0.03);
         }
-        if(depth>=3&&Math.random()<0.85){
+        if(depth>=3&&Math.random()<0.8){
           e=branch(px,py,a+(Math.random()-0.5)*0.55,len*0.58,depth+1,width*0.5,t0+0.05);
         }
         return e;
       }
-      branch(baseX,baseY,-Math.PI/2,initLen,0,(mobile?9:12)*TDPR,0.1);
+      branch(baseX,baseY,-Math.PI/2,initLen,0,(mobile?9:11)*TDPR,0.1);
+      leaves.forEach(l=>{if(Math.random()<0.06){l.twink=true;}});
+      blooms.forEach(b=>{if(Math.random()<0.25){b.twink=true;}});
       spores=[];
-      const nS=mobile?24:55;
+      const nS=mobile?20:38;
       for(let i=0;i<nS;i++){
         spores.push({x:mobile?TW*Math.random():TW*(0.6+Math.random()*0.38),
           y:TH*Math.random(),r:(0.8+Math.random()*2.2)*TDPR,
-          sp:(0.15+Math.random()*0.5)*TDPR,phase:Math.random()*6.28,
+          sp:(0.15+Math.random()*0.5)*TDPR,phase:Math.random()*TAU,
           alpha:0.2+Math.random()*0.6});
       }
-    }
-    function rs(){
-      TDPR=Math.min(window.devicePixelRatio,2);
-      const h=tcv.parentElement.offsetHeight||window.innerHeight;
-      TW=tcv.width=innerWidth*TDPR;
-      TH=tcv.height=h*TDPR;
-      tcv.style.width=innerWidth+'px';
-      tcv.style.height=h+'px';
-      build();
-    }
-    function frame(now){
-      const el=(now-startT)/1000;
-      const gp=Math.min(1,el/GROW);
-      tctx.clearRect(0,0,TW,TH);
+      treeCache=document.createElement('canvas');treeCache.width=TW;treeCache.height=TH;
+      tc=treeCache.getContext('2d');
+      bgCache=document.createElement('canvas');bgCache.width=TW;bgCache.height=TH;
+      const bc=bgCache.getContext('2d');
       const gx=mobile?TW*0.5:TW*0.85, gy=mobile?TH*0.72:TH*0.58;
-      const rg=tctx.createRadialGradient(gx,gy,0,gx,gy,TH*0.55);
+      const rg=bc.createRadialGradient(gx,gy,0,gx,gy,TH*0.55);
       rg.addColorStop(0,'rgba(34,197,94,0.10)');
       rg.addColorStop(0.5,'rgba(34,197,94,0.04)');
       rg.addColorStop(1,'rgba(0,0,0,0)');
-      tctx.fillStyle=rg;tctx.fillRect(0,0,TW,TH);
-      spores.forEach(s=>{
+      bc.fillStyle=rg;bc.fillRect(0,0,TW,TH);
+    }
+    function rs(){
+      TDPR=Math.min(window.devicePixelRatio||1,1.75);
+      const h=tcv.parentElement.offsetHeight||window.innerHeight;
+      TW=tcv.width=Math.round(innerWidth*TDPR);
+      TH=tcv.height=Math.round(h*TDPR);
+      tcv.style.width=innerWidth+'px';
+      tcv.style.height=h+'px';
+      spLeaf=makeSprite([[0,'rgba(74,222,128,1)'],[0.4,'rgba(74,222,128,0.65)'],[1,'rgba(74,222,128,0)']]);
+      spLeaf2=makeSprite([[0,'rgba(134,239,172,1)'],[0.4,'rgba(134,239,172,0.6)'],[1,'rgba(134,239,172,0)']]);
+      spBloom=makeSprite([[0,'rgba(254,240,200,1)'],[0.3,'rgba(251,191,36,0.95)'],[0.7,'rgba(251,191,36,0.35)'],[1,'rgba(251,191,36,0)']]);
+      spSpore=makeSprite([[0,'rgba(255,236,180,1)'],[0.35,'rgba(251,191,36,0.8)'],[1,'rgba(251,191,36,0)']]);
+      build();
+      startT=performance.now();
+    }
+    function frame(now){
+      if(!running)return;
+      const el=(now-startT)/1000;
+      const gp=Math.min(1,el/GROW);
+      const branchAlpha=mobile?0.4:0.9;
+      const maxD=mobile?7:9;
+
+      if(!fullyBaked){
+        /* 烘焙 pass：新长完的枝干画到离屏缓存（只画一次） */
+        tc.lineCap='round';
+        for(let i=0;i<segments.length;i++){
+          const sg=segments[i];
+          if(sg.baked)continue;
+          const p=(gp*GROW-sg.t0)/(sg.t1-sg.t0);
+          if(p>=1){
+            tc.beginPath();tc.moveTo(sg.x1,sg.y1);tc.lineTo(sg.x2,sg.y2);
+            tc.strokeStyle=branchColor(sg.depth/maxD)+branchAlpha+')';
+            tc.lineWidth=sg.width;
+            tc.shadowColor='rgba(74,222,128,0.65)';tc.shadowBlur=8*TDPR;tc.stroke();
+            sg.baked=true;
+          }
+        }
+        tc.shadowBlur=0;
+        if(gp>=0.7){
+          const lp=Math.min(1,(gp-0.7)/0.3);
+          const leafA=mobile?0.5:0.9;
+          for(let i=0;i<leaves.length;i++){
+            const lf=leaves[i];
+            if(lf.baked||lf.twink)continue;
+            const d=i/leaves.length,ap=Math.max(0,Math.min(1,(lp-d*0.6)/0.4));
+            if(ap>=1){drawSp(tc,lf.hue<0.5?spLeaf:spLeaf2,lf.x,lf.y,lf.size,leafA);lf.baked=true;}
+          }
+          for(let i=0;i<blooms.length;i++){
+            const bl=blooms[i];
+            if(bl.baked||bl.twink)continue;
+            const d=i/blooms.length,ap=Math.max(0,Math.min(1,(lp-d*0.5)/0.5));
+            if(ap>=1){drawSp(tc,spBloom,bl.x,bl.y,bl.size,1);bl.baked=true;}
+          }
+        }
+        if(gp>=1){
+          let allB=true;
+          for(let i=0;i<segments.length;i++){if(!segments[i].baked){allB=false;break;}}
+          if(allB){for(let i=0;i<leaves.length;i++){const l=leaves[i];if(!l.baked&&!l.twink){allB=false;break;}}}
+          if(allB){for(let i=0;i<blooms.length;i++){const b=blooms[i];if(!b.baked&&!b.twink){allB=false;break;}}}
+          if(allB)fullyBaked=true;
+        }
+      }
+
+      /* 主 canvas */
+      tctx.clearRect(0,0,TW,TH);
+      tctx.drawImage(bgCache,0,0);
+      tctx.drawImage(treeCache,0,0);
+
+      if(!fullyBaked){
+        /* 正在生长的枝干（少量，带发光） */
+        tctx.lineCap='round';tctx.shadowColor='rgba(74,222,128,0.7)';tctx.shadowBlur=8*TDPR;
+        for(let i=0;i<segments.length;i++){
+          const sg=segments[i];
+          if(sg.baked)continue;
+          const p=(gp*GROW-sg.t0)/(sg.t1-sg.t0);
+          if(p>0&&p<1){
+            const ex=sg.x1+(sg.x2-sg.x1)*ease(p),ey=sg.y1+(sg.y2-sg.y1)*ease(p);
+            tctx.beginPath();tctx.moveTo(sg.x1,sg.y1);tctx.lineTo(ex,ey);
+            tctx.strokeStyle=branchColor(sg.depth/maxD)+branchAlpha+')';
+            tctx.lineWidth=sg.width;tctx.stroke();
+          }
+        }
+        tctx.shadowBlur=0;
+        if(gp>=0.7){
+          const lp=Math.min(1,(gp-0.7)/0.3);
+          const leafA=mobile?0.5:0.9;
+          for(let i=0;i<leaves.length;i++){
+            const lf=leaves[i];
+            if(lf.baked||lf.twink)continue;
+            const d=i/leaves.length,ap=Math.max(0,Math.min(1,(lp-d*0.6)/0.4));
+            if(ap>0&&ap<1)drawSp(tctx,lf.hue<0.5?spLeaf:spLeaf2,lf.x,lf.y,lf.size,ap*leafA);
+          }
+          for(let i=0;i<blooms.length;i++){
+            const bl=blooms[i];
+            if(bl.baked||bl.twink)continue;
+            const d=i/blooms.length,ap=Math.max(0,Math.min(1,(lp-d*0.5)/0.5));
+            if(ap>0&&ap<1)drawSp(tctx,spBloom,bl.x,bl.y,bl.size,ap);
+          }
+        }
+      }
+
+      /* 动态闪烁点（少量，保持生命感） */
+      if(gp>=1){
+        for(let i=0;i<leafTwink.length;i++){
+          const lf=leafTwink[i];
+          const tw=0.45+0.5*Math.sin(el*2+lf.phase);
+          const sway=Math.sin(el*0.9+lf.phase)*3*TDPR;
+          drawSp(tctx,lf.hue<0.5?spLeaf:spLeaf2,lf.x+sway,lf.y,lf.size,tw);
+        }
+        for(let i=0;i<bloomTwink.length;i++){
+          const bl=bloomTwink[i];
+          const tw=0.55+0.45*Math.sin(el*1.8+bl.phase);
+          const sway=Math.sin(el*0.9+bl.phase)*3*TDPR;
+          drawSp(tctx,spBloom,bl.x+sway,bl.y,bl.size,tw);
+        }
+      }
+
+      /* 孢子（贴图，轻量） */
+      for(let i=0;i<spores.length;i++){
+        const s=spores[i];
         s.y-=s.sp;s.x+=Math.sin(el*0.8+s.phase)*0.3*TDPR;
         if(s.y<-20){s.y=TH+20;s.x=mobile?TW*Math.random():TW*(0.6+Math.random()*0.38);}
         const tw=0.5+0.5*Math.sin(el*1.5+s.phase);
-        tctx.beginPath();tctx.arc(s.x,s.y,s.r,0,6.28);
-        tctx.fillStyle='rgba(251,191,36,'+(s.alpha*tw*0.8).toFixed(3)+')';
-        tctx.shadowColor='rgba(251,191,36,0.9)';tctx.shadowBlur=8*TDPR;tctx.fill();
-      });
-      tctx.shadowBlur=0;
-      const branchAlpha=mobile?0.32:0.85;
-      segments.forEach(sg=>{
-        let p=(gp*GROW-sg.t0)/(sg.t1-sg.t0);
-        p=Math.max(0,Math.min(1,p));
-        if(p<=0)return;
-        const ex=sg.x1+(sg.x2-sg.x1)*ease(p),ey=sg.y1+(sg.y2-sg.y1)*ease(p);
-        const ratio=sg.depth/(mobile?8:9);
-        let r1,g1,b1;
-        if(ratio<0.55){r1=26+ratio*70;g1=180+ratio*30;b1=80;}
-        else{r1=110+(ratio-0.55)*320;g1=190;b1=70;}
-        tctx.beginPath();tctx.moveTo(sg.x1,sg.y1);tctx.lineTo(ex,ey);
-        tctx.strokeStyle='rgba('+(r1|0)+','+(g1|0)+','+(b1|0)+','+branchAlpha+')';
-        tctx.lineWidth=sg.width;tctx.lineCap='round';
-        tctx.shadowColor='rgba(74,222,128,0.7)';tctx.shadowBlur=10*TDPR;tctx.stroke();
-      });
-      if(gp>=0.7){
-        const lp=Math.min(1,(gp-0.7)/0.3);
-        const leafA=mobile?0.45:0.9;
-        leaves.forEach((lf,i)=>{
-          const d=i/leaves.length,ap=Math.max(0,Math.min(1,(lp-d*0.6)/0.4));
-          if(ap<=0)return;
-          const breath=0.7+0.3*Math.sin(el*2+lf.phase);
-          const sway=Math.sin(el*0.9+lf.phase)*3*TDPR;
-          const g=lf.hue<0.5?'74,222,128':'134,239,172';
-          tctx.beginPath();tctx.arc(lf.x+sway,lf.y,lf.size*breath,0,6.28);
-          tctx.fillStyle='rgba('+g+','+(ap*leafA).toFixed(3)+')';
-          tctx.shadowColor='rgba(74,222,128,0.9)';tctx.shadowBlur=12*TDPR;tctx.fill();
-        });
-        blooms.forEach((bl,i)=>{
-          const d=i/blooms.length,ap=Math.max(0,Math.min(1,(lp-d*0.5)/0.5));
-          if(ap<=0)return;
-          const pulse=0.75+0.25*Math.sin(el*1.8+bl.phase);
-          const sway=Math.sin(el*0.9+bl.phase)*3*TDPR;
-          tctx.beginPath();tctx.arc(bl.x+sway,bl.y,bl.size*pulse,0,6.28);
-          tctx.fillStyle='rgba(251,191,36,'+ap.toFixed(3)+')';
-          tctx.shadowColor='rgba(251,191,36,1)';tctx.shadowBlur=16*TDPR;tctx.fill();
-          tctx.beginPath();tctx.arc(bl.x+sway,bl.y,bl.size*0.4*pulse,0,6.28);
-          tctx.fillStyle='rgba(254,240,200,'+ap.toFixed(3)+')';tctx.fill();
-        });
+        drawSp(tctx,spSpore,s.x,s.y,s.r,s.alpha*tw*0.8);
       }
-      tctx.shadowBlur=0;
       requestAnimationFrame(frame);
     }
     rs();
     let rt;
     window.addEventListener('resize',()=>{clearTimeout(rt);rt=setTimeout(rs,200);});
-    startT=performance.now();
+    /* 滚出 Hero / 页面隐藏时暂停，回来续上，避免后台空转 */
+    if('IntersectionObserver' in window){
+      new IntersectionObserver(function(en){
+        const vis=en[0].isIntersecting;
+        if(vis&&!running){startT+=performance.now()-pauseAt;running=true;requestAnimationFrame(frame);}
+        else if(!vis&&running){pauseAt=performance.now();running=false;}
+      },{threshold:0.02}).observe(tcv);
+    }
+    document.addEventListener('visibilitychange',function(){
+      if(document.hidden&&running){pauseAt=performance.now();running=false;}
+      else if(!document.hidden&&!running){startT+=performance.now()-pauseAt;running=true;requestAnimationFrame(frame);}
+    });
     requestAnimationFrame(frame);
   })();
 
